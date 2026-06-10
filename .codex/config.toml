@@ -1,0 +1,5 @@
+# STDIO server (proceso local)
+
+[mcp_servers.angular-cli]
+command = "npx"
+args    = ["-y", "@angular/cli", "mcp"]
