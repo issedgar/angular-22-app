@@ -61,6 +61,7 @@ html, body {
   font-family: var(--font-sans);
   background-color: var(--color-surface-900);
   color: theme(colors.neutral.100);
+  color-scheme: dark;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 300ms ease, color 300ms ease;
@@ -145,6 +146,11 @@ html, body {
   background: linear-gradient(to bottom right, #e2e8f0, #f1f5f9);
 }
 
+[data-theme="light"] .showcase-watermark {
+  color: color-mix(in srgb, var(--color-angular-red) 28%, #0f172a);
+  opacity: 0.22;
+}
+
 /* ── Light theme sidebar ──────────────────────────────────────────────────── */
 [data-theme="light"] .app-sidebar {
   background-color: #f8fafc;
@@ -177,8 +183,33 @@ button:active:not(:disabled),
 }
 
 button,
-[role="button"] {
+[role="button"],
+a,
+input,
+select,
+textarea {
   transition: transform 160ms ease-out;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-angular-red);
+  outline-offset: 2px;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+.showcase-watermark {
+  color: color-mix(in srgb, var(--color-angular-red) 42%, #ffffff);
+  opacity: 0.24;
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--color-angular-red) 32%, transparent));
 }
 
 /* ── Color picker popover animation ───────────────────────────────────────── */
@@ -221,11 +252,6 @@ button,
 }
 .de-row:nth-child(even) {
   background-color: var(--color-surface-800);
-}
-.de-row:hover {
-  background-color: var(--color-surface-600);
-  border-left-color: color-mix(in srgb, var(--color-angular-red) 55%, transparent);
-  color: var(--color-neutral-100);
 }
 .de-row--selected,
 .de-row--selected:hover {
@@ -278,4 +304,32 @@ button,
 
 [data-theme="light"] .dot-bg::before {
   opacity: 0.08;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .de-row:hover {
+    background-color: var(--color-surface-600);
+    border-left-color: color-mix(in srgb, var(--color-angular-red) 55%, transparent);
+    color: var(--color-neutral-100);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  button:active:not(:disabled),
+  [role="button"]:active:not([aria-disabled="true"]) {
+    transform: none;
+  }
+
+  .stagger-item {
+    animation: none;
+  }
 }

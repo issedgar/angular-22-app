@@ -125,40 +125,39 @@ const STATS: Stat[] = [
 
       <!-- ── Hero ────────────────────────────────────────────── -->
       <section
-        class="hero-gradient relative overflow-hidden rounded-2xl border border-neutral-800 bg-gradient-to-br from-surface-700 to-surface-900 p-8 lg:p-10 shadow-card"
+        class="hero-gradient relative overflow-hidden rounded-2xl border border-neutral-800 bg-gradient-to-br from-surface-700 to-surface-900 p-6 sm:p-8 lg:p-10 shadow-card"
         aria-labelledby="hero-title"
       >
-        <!-- Background glows -->
+        <!-- Background technical grid -->
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div class="absolute -right-16 -top-16 h-72 w-72 rounded-full bg-angular-red/10 blur-3xl"></div>
-          <div class="absolute -bottom-8 right-40 h-48 w-48 rounded-full bg-angular-red/5 blur-2xl"></div>
+          <div class="absolute inset-y-0 right-0 hidden w-2/3 bg-[linear-gradient(90deg,transparent,rgba(221,0,49,0.08)),linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] bg-[size:auto,40px_40px,40px_40px] lg:block"></div>
         </div>
 
         <!-- Angular shield watermark — geometric pattern -->
-        <div class="pointer-events-none absolute right-0 top-0 hidden h-full w-1/2 lg:block" aria-hidden="true">
-          <svg class="h-full w-full text-angular-red/[0.04]" viewBox="0 0 500 400" fill="none" preserveAspectRatio="xMaxYMid slice">
+        <div class="pointer-events-none absolute right-0 top-0 hidden h-full w-[58%] lg:block" aria-hidden="true">
+          <svg class="showcase-watermark h-full w-full" viewBox="0 0 500 400" fill="none" preserveAspectRatio="xMaxYMid slice">
             <!-- Shield outline -->
-            <polygon points="250,40 150,80 165,280 250,340 335,280 350,80" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <polygon points="250,36 145,78 160,286 250,350 340,286 355,78" stroke="currentColor" stroke-width="2.8" fill="none"/>
             <!-- Inner A -->
-            <path d="M250,80 L195,260h25l12-35h36l12,35h25L250,80z M265,200h-30l15-50L265,200z" fill="currentColor" opacity="0.6"/>
+            <path d="M250,76 L190,266h28l13-38h38l13,38h28L250,76z M266,202h-32l16-56L266,202z" fill="currentColor" opacity="0.74"/>
             <!-- Geometric lines radiating from shield -->
-            <line x1="250" y1="40" x2="250" y2="0" stroke="currentColor" stroke-width="0.5"/>
-            <line x1="350" y1="80" x2="500" y2="30" stroke="currentColor" stroke-width="0.5"/>
-            <line x1="335" y1="280" x2="500" y2="350" stroke="currentColor" stroke-width="0.5"/>
-            <line x1="150" y1="80" x2="0" y2="30" stroke="currentColor" stroke-width="0.5"/>
-            <line x1="165" y1="280" x2="0" y2="350" stroke="currentColor" stroke-width="0.5"/>
+            <line x1="250" y1="36" x2="250" y2="0" stroke="currentColor" stroke-width="0.9"/>
+            <line x1="355" y1="78" x2="500" y2="28" stroke="currentColor" stroke-width="0.9"/>
+            <line x1="340" y1="286" x2="500" y2="350" stroke="currentColor" stroke-width="0.9"/>
+            <line x1="145" y1="78" x2="0" y2="28" stroke="currentColor" stroke-width="0.9"/>
+            <line x1="160" y1="286" x2="0" y2="350" stroke="currentColor" stroke-width="0.9"/>
             <!-- Horizontal grid lines -->
-            <line x1="0" y1="100" x2="500" y2="100" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
-            <line x1="0" y1="200" x2="500" y2="200" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
-            <line x1="0" y1="300" x2="500" y2="300" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+            <line x1="0" y1="100" x2="500" y2="100" stroke="currentColor" stroke-width="0.5" opacity="0.52"/>
+            <line x1="0" y1="200" x2="500" y2="200" stroke="currentColor" stroke-width="0.5" opacity="0.52"/>
+            <line x1="0" y1="300" x2="500" y2="300" stroke="currentColor" stroke-width="0.5" opacity="0.52"/>
             <!-- Corner accents -->
-            <polyline points="460,20 480,20 480,40" stroke="currentColor" stroke-width="1" fill="none" opacity="0.5"/>
-            <polyline points="20,20 40,20" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
-            <polyline points="20,380 40,380" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
+            <polyline points="458,20 482,20 482,44" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.74"/>
+            <polyline points="20,20 44,20" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.5"/>
+            <polyline points="20,380 44,380" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.5"/>
           </svg>
         </div>
 
-        <div class="relative max-w-xl">
+        <div class="relative max-w-xl lg:max-w-2xl">
           <!-- Live badge -->
           <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-angular-red/20 bg-angular-red/10 px-3 py-1">
             <div class="h-1.5 w-1.5 animate-pulse rounded-full bg-angular-red"></div>

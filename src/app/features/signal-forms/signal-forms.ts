@@ -74,7 +74,9 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
                     [formField]="regForm.username"
                     [placeholder]="'signalForms.usernamePlaceholder' | translate : ts.currentLanguage()"
                     class="w-full rounded-lg border px-3 py-2.5 text-sm bg-surface-800 text-neutral-100 placeholder-neutral-600 outline-none transition-colors
-                      focus:ring-2 focus:ring-angular-red/30"
+                      focus:ring-2 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red"
+                    autocomplete="username"
+                    spellcheck="false"
                     [class.border-red-500]="regForm.username().touched() && regForm.username().invalid()"
                     [class.border-green-500]="regForm.username().touched() && regForm.username().valid()"
                     [class.border-neutral-700]="!regForm.username().touched() || regForm.username().pending()"
@@ -84,7 +86,7 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
                   @if (regForm.username().pending()) {
                     <div class="absolute right-3 top-1/2 -translate-y-1/2">
                       <svg class="h-4 w-4 animate-spin text-amber-400" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="31.4" stroke-dashoffset="10"/>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="31.4" stroke-dashoffset="10" aria-hidden="true"/>
                       </svg>
                     </div>
                   }
@@ -123,7 +125,9 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
                   [formField]="regForm.email"
                   [placeholder]="'signalForms.emailPlaceholder' | translate : ts.currentLanguage()"
                   class="w-full rounded-lg border px-3 py-2.5 text-sm bg-surface-800 text-neutral-100 placeholder-neutral-600 outline-none transition-colors
-                    focus:ring-2 focus:ring-angular-red/30"
+                    focus:ring-2 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red"
+                  autocomplete="email"
+                  spellcheck="false"
                   [class.border-red-500]="regForm.email().touched() && regForm.email().invalid()"
                   [class.border-green-500]="regForm.email().touched() && regForm.email().valid()"
                   [class.border-neutral-700]="!regForm.email().touched()"
@@ -148,7 +152,8 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
                   [formField]="regForm.password"
                   [placeholder]="'signalForms.passwordPlaceholder' | translate : ts.currentLanguage()"
                   class="w-full rounded-lg border px-3 py-2.5 text-sm bg-surface-800 text-neutral-100 placeholder-neutral-600 outline-none transition-colors
-                    focus:ring-2 focus:ring-angular-red/30"
+                    focus:ring-2 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red"
+                  autocomplete="new-password"
                   [class.border-red-500]="regForm.password().touched() && regForm.password().invalid()"
                   [class.border-green-500]="regForm.password().touched() && regForm.password().valid()"
                   [class.border-neutral-700]="!regForm.password().touched()"
@@ -181,7 +186,7 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
                 <button
                   type="submit"
                   [disabled]="regForm().submitting()"
-                  class="w-full rounded-lg bg-angular-red px-4 py-2.5 text-sm font-semibold text-white hover:bg-angular-dark-red transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  class="w-full rounded-lg bg-angular-red px-4 py-2.5 text-sm font-semibold text-white hover:bg-angular-dark-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   @if (regForm().submitting()) {
                     <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">

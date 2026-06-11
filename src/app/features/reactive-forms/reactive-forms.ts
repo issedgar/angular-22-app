@@ -53,12 +53,16 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
             <form [formGroup]="regForm" (ngSubmit)="submitReg()" class="space-y-3" novalidate>
               <!-- Email -->
               <div class="space-y-1">
-                <label class="text-xs text-neutral-500">{{ 'forms.email' | translate : ts.currentLanguage() }}</label>
+                <label for="reactive-email" class="text-xs text-neutral-500">{{ 'forms.email' | translate : ts.currentLanguage() }}</label>
                 <input
+                  id="reactive-email"
+                  name="email"
                   formControlName="email"
                   type="email"
                   [placeholder]="'forms.emailPlaceholder' | translate : ts.currentLanguage()"
-                  class="w-full rounded-lg border px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none transition-colors"
+                  class="w-full rounded-lg border px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
+                  autocomplete="email"
+                  spellcheck="false"
                   [class.border-neutral-700]="!isInvalid(regEmail)"
                   [class.border-red-600]="isInvalid(regEmail)"
                   [class.focus:border-angular-red]="!isInvalid(regEmail)"
@@ -72,12 +76,15 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
               </div>
               <!-- Password -->
               <div class="space-y-1">
-                <label class="text-xs text-neutral-500">{{ 'forms.password' | translate : ts.currentLanguage() }}</label>
+                <label for="reactive-password" class="text-xs text-neutral-500">{{ 'forms.password' | translate : ts.currentLanguage() }}</label>
                 <input
+                  id="reactive-password"
+                  name="password"
                   formControlName="password"
                   type="password"
                   [placeholder]="'forms.passwordPlaceholder' | translate : ts.currentLanguage()"
-                  class="w-full rounded-lg border px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none transition-colors"
+                  class="w-full rounded-lg border px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
+                  autocomplete="new-password"
                   [class.border-neutral-700]="!isInvalid(regPassword)"
                   [class.border-red-600]="isInvalid(regPassword)"
                 />
@@ -93,12 +100,15 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
               </div>
               <!-- Confirm -->
               <div class="space-y-1">
-                <label class="text-xs text-neutral-500">{{ 'forms.confirmPassword' | translate : ts.currentLanguage() }}</label>
+                <label for="reactive-confirm" class="text-xs text-neutral-500">{{ 'forms.confirmPassword' | translate : ts.currentLanguage() }}</label>
                 <input
+                  id="reactive-confirm"
+                  name="confirm"
                   formControlName="confirm"
                   type="password"
                   [placeholder]="'forms.repeatPasswordPlaceholder' | translate : ts.currentLanguage()"
-                  class="w-full rounded-lg border px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none transition-colors"
+                  class="w-full rounded-lg border px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
+                  autocomplete="new-password"
                   [class.border-neutral-700]="!regForm.errors?.['passwordMismatch']"
                   [class.border-red-600]="regForm.errors?.['passwordMismatch'] && regConfirm.touched"
                 />
@@ -117,7 +127,7 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
               <button
                 type="submit"
                 [disabled]="regForm.invalid"
-                class="w-full rounded-lg bg-angular-red py-2 text-xs font-medium text-white transition-colors hover:bg-angular-dark-red disabled:opacity-40 disabled:cursor-not-allowed"
+                class="w-full rounded-lg bg-angular-red py-2 text-xs font-medium text-white transition-colors hover:bg-angular-dark-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red disabled:opacity-40 disabled:cursor-not-allowed"
               >{{ 'forms.register' | translate : ts.currentLanguage() }}</button>
             </form>
             @if (regResult()) {
@@ -144,13 +154,17 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
                       [formControlName]="i"
                       type="text"
                       [placeholder]="'Skill ' + (i + 1)"
-                      class="flex-1 rounded-lg border border-neutral-700 px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-angular-red/50 transition-colors"
+                      class="flex-1 rounded-lg border border-neutral-700 px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-angular-red/50 focus:ring-2 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
+                      [attr.name]="'skill-' + i"
+                      [attr.aria-label]="'Skill ' + (i + 1)"
+                      autocomplete="off"
                     />
                     <button
                       type="button"
                       (click)="removeSkill(i)"
                       [disabled]="skillControls.length <= 1"
-                      class="shrink-0 rounded border border-red-800/30 px-2 py-1.5 text-xs text-red-500 hover:bg-red-900/10 transition-colors disabled:opacity-30"
+                      class="shrink-0 rounded border border-red-800/30 px-2 py-1.5 text-xs text-red-500 hover:bg-red-900/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors disabled:opacity-30"
+                      [attr.aria-label]="'Remove skill ' + (i + 1)"
                     >✕</button>
                   </div>
                 }
@@ -158,12 +172,12 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
               <button
                 type="button"
                 (click)="addSkill()"
-                class="w-full rounded-lg border border-dashed border-neutral-700 py-2 text-xs text-neutral-500 hover:border-neutral-500 hover:text-neutral-300 transition-colors"
+                class="w-full rounded-lg border border-dashed border-neutral-700 py-2 text-xs text-neutral-500 hover:border-neutral-500 hover:text-neutral-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
               >{{ 'forms.addSkill' | translate : ts.currentLanguage() }}</button>
               <button
                 type="submit"
                 [disabled]="skillsForm.invalid"
-                class="w-full rounded-lg bg-angular-red py-2 text-xs font-medium text-white transition-colors hover:bg-angular-dark-red disabled:opacity-40 disabled:cursor-not-allowed"
+                class="w-full rounded-lg bg-angular-red py-2 text-xs font-medium text-white transition-colors hover:bg-angular-dark-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red disabled:opacity-40 disabled:cursor-not-allowed"
               >{{ 'forms.saveSkills' | translate : ts.currentLanguage() }}</button>
             </form>
             @if (skillsResult()) {
@@ -191,7 +205,10 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
               [formControl]="searchControl"
               type="text"
               [placeholder]="'reactiveForms.typeToSearch' | translate : ts.currentLanguage()"
-              class="w-full rounded-lg border border-neutral-700 px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-angular-red/50 transition-colors"
+              class="w-full rounded-lg border border-neutral-700 px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-angular-red/50 focus:ring-2 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
+              name="search"
+              [attr.aria-label]="'reactiveForms.typeToSearch' | translate : ts.currentLanguage()"
+              autocomplete="off"
             />
             <div class="rounded-lg border border-neutral-800 bg-surface-800 p-4 space-y-2 text-xs">
               <div class="flex justify-between">

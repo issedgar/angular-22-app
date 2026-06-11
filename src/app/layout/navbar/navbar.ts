@@ -28,10 +28,10 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
   selector: 'app-navbar',
   imports: [TranslatePipe],
   template: `
-    <header class="h-16 flex items-center px-4 gap-3 bg-surface-800/80 backdrop-blur-sm border-b border-neutral-800 shrink-0 z-[60] shadow-card">
+    <header class="h-16 flex items-center px-3 sm:px-4 gap-2 sm:gap-3 bg-surface-800/80 backdrop-blur-sm border-b border-neutral-800 shrink-0 z-[60] shadow-card">
       <!-- Mobile hamburger -->
       <button
-        class="lg:hidden p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
+        class="lg:hidden p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
         (click)="layout.toggleMobileSidebar()"
         type="button"
         [attr.aria-label]="'navbar.openNav' | translate : ts.currentLanguage()"
@@ -43,7 +43,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
 
       <!-- Desktop: sidebar collapse toggle -->
       <button
-        class="hidden lg:flex p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
+        class="hidden lg:flex p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
         (click)="layout.toggleSidebar()"
         type="button"
         [attr.aria-label]="'navbar.toggleSidebar' | translate : ts.currentLanguage()"
@@ -54,7 +54,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
       </button>
 
       <!-- Breadcrumb -->
-      <nav class="flex items-center gap-2 text-sm min-w-0" aria-label="Breadcrumb">
+      <nav class="flex min-w-0 max-w-[9rem] items-center gap-2 text-sm sm:max-w-none" aria-label="Breadcrumb">
         <ol class="flex items-center gap-2 list-none m-0 p-0">
           <li class="text-neutral-500 hidden sm:inline">
             {{ 'navbar.appName' | translate : ts.currentLanguage() }}
@@ -67,12 +67,13 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
       <div class="flex-1"></div>
 
       <!-- Primary color picker -->
-      <div class="relative flex items-center">
+      <div class="relative hidden items-center sm:flex">
         <button
           (click)="toggleColorPicker()"
-          class="p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
+          class="p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
           [title]="'theme.primary' | translate : ts.currentLanguage()"
           type="button"
+          [attr.aria-label]="'theme.primary' | translate : ts.currentLanguage()"
         >
           <span class="block w-4 h-4 rounded-full border-2 border-white/20 transition-colors" [style.background]="appearance.primaryColor()"></span>
         </button>
@@ -81,7 +82,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
       <!-- Theme toggle -->
       <button
         (click)="appearance.toggleTheme()"
-        class="p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
+        class="p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
         [title]="'theme.toggle' | translate : ts.currentLanguage()"
         type="button"
         [attr.aria-label]="'theme.toggle' | translate : ts.currentLanguage()"
@@ -107,7 +108,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
           <button
             (click)="switchLang(lang)"
             type="button"
-            class="px-2.5 py-1.5 text-xs font-semibold uppercase transition-colors leading-none"
+            class="px-2 py-1.5 text-xs font-semibold uppercase transition-colors leading-none sm:px-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-angular-red"
             [class]="ts.currentLanguage() === lang
               ? 'bg-angular-red text-white'
               : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800'"

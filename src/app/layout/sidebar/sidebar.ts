@@ -177,7 +177,7 @@ const BADGE_KEY: Record<NavItem['badge'], string> = {
               [routerLink]="item.route"
               routerLinkActive="bg-angular-red/10 text-neutral-100 border-l-2 border-angular-red"
               [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
-              class="flex items-start gap-3 mx-2 px-3 py-2.5 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/60 transition-colors duration-150 border-l-2 border-transparent no-underline cursor-pointer"
+              class="flex items-start gap-3 mx-2 px-3 py-2.5 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors duration-150 border-l-2 border-transparent no-underline cursor-pointer"
               [title]="layout.sidebarCollapsed() ? (item.labelKey | translate : ts.currentLanguage()) : ''"
               (click)="handleNavClick()"
             >
@@ -211,7 +211,7 @@ const BADGE_KEY: Record<NavItem['badge'], string> = {
       <div class="hidden lg:flex items-center justify-end px-3 py-3 border-t border-neutral-800 shrink-0">
         <button
           (click)="layout.toggleSidebar()"
-          class="p-2 rounded-lg text-neutral-500 hover:text-neutral-200 hover:bg-neutral-800 transition-colors"
+          class="p-2 rounded-lg text-neutral-500 hover:text-neutral-200 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
           [title]="layout.sidebarCollapsed()
             ? ('sidebar.expandSidebar' | translate : ts.currentLanguage())
             : ('sidebar.collapseSidebar' | translate : ts.currentLanguage())"

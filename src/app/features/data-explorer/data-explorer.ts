@@ -14,7 +14,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
   selector: 'app-data-explorer',
   imports: [RouterLink, TranslatePipe],
   template: `
-    <div class="flex flex-col gap-4 h-full">
+    <div class="flex h-full flex-col gap-4">
 
       <!-- Section header -->
       <div class="shrink-0">
@@ -27,9 +27,9 @@ type PageSize = (typeof PAGE_SIZES)[number];
       </div>
 
       <!-- Toolbar -->
-      <div class="shrink-0 flex flex-wrap items-center gap-3">
+      <div class="shrink-0 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <!-- Search — type="text" evita el botón X nativo del browser -->
-        <div class="relative flex-1 min-w-56">
+        <div class="relative w-full min-w-0 flex-1 sm:min-w-56">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
             <path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -38,7 +38,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
             [value]="searchInput()"
             (input)="onSearchInput($any($event.target).value)"
             [placeholder]="'dataExplorer.searchPlaceholder' | translate : ts.currentLanguage()"
-            class="w-full rounded-lg border border-neutral-700 bg-surface-800 py-2 pl-9 pr-9 text-sm text-neutral-100 placeholder-neutral-500 focus:border-angular-red/50 focus:outline-none focus:ring-1 focus:ring-angular-red/30 transition-colors"
+            class="w-full rounded-lg border border-neutral-700 bg-surface-800 py-2 pl-9 pr-9 text-sm text-neutral-100 placeholder-neutral-500 focus:border-angular-red/50 focus:outline-none focus:ring-1 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
             [attr.aria-label]="'common.search' | translate : ts.currentLanguage()"
             autocomplete="off"
           />
@@ -53,7 +53,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
             <button
               (click)="clearSearch()"
               type="button"
-              class="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded text-neutral-500 hover:text-neutral-200 transition-colors"
+              class="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded text-neutral-500 hover:text-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
               [attr.aria-label]="'common.clearSearch' | translate : ts.currentLanguage()"
             >
               <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -65,14 +65,14 @@ type PageSize = (typeof PAGE_SIZES)[number];
 
         <!-- Page size selector -->
         @if (!isSearchActive()) {
-          <div class="flex items-center gap-2 shrink-0">
+          <div class="flex w-full items-center justify-between gap-2 shrink-0 sm:w-auto sm:justify-start">
             <label class="text-xs text-neutral-500 hidden sm:inline whitespace-nowrap">
               {{ 'paginator.rowsPerPage' | translate : ts.currentLanguage() }}
             </label>
             <select
               [value]="pageSize()"
               (change)="setPageSize(+$any($event.target).value)"
-              class="rounded-lg border border-neutral-700 bg-surface-800 py-2 pl-3 pr-7 text-sm text-neutral-300 focus:border-angular-red/50 focus:outline-none focus:ring-1 focus:ring-angular-red/30 transition-colors appearance-none"
+              class="rounded-lg border border-neutral-700 bg-surface-800 py-2 pl-3 pr-7 text-sm text-neutral-300 focus:border-angular-red/50 focus:outline-none focus:ring-1 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors appearance-none"
             >
               @for (size of pageSizes; track size) {
                 <option [value]="size">{{ size }}</option>
@@ -86,7 +86,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
           <button
             (click)="listResource.reload()"
             type="button"
-            class="shrink-0 p-2 rounded-lg border border-neutral-700 text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
+            class="shrink-0 self-start p-2 rounded-lg border border-neutral-700 text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors sm:self-auto"
             [attr.aria-label]="'common.retry' | translate : ts.currentLanguage()"
           >
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -97,7 +97,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
 
         <!-- Total count -->
         @if (!isSearchActive() && totalCount() > 0) {
-          <span class="text-xs text-neutral-500 shrink-0">
+          <span class="text-xs text-neutral-500 shrink-0 sm:ml-auto">
             {{ showingFrom() }}–{{ showingTo() }} / {{ totalCount() }}
           </span>
         }
@@ -111,7 +111,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
       }
 
       <!-- Main table panel -->
-      <div class="flex flex-col rounded-xl border border-neutral-800 bg-surface-800 overflow-hidden shadow-card flex-1 min-h-[420px]">
+      <div class="flex flex-col rounded-xl border border-neutral-800 bg-surface-800 overflow-hidden shadow-card flex-1 min-h-[340px] sm:min-h-[420px]">
 
         <!-- Search result panel -->
         @if (isSearchActive()) {
@@ -141,7 +141,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                 <button
                   (click)="clearSearch()"
                   type="button"
-                  class="rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-400 hover:text-neutral-100 transition-colors"
+                  class="rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-400 hover:text-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
                 >
                   {{ 'common.clearSearch' | translate : ts.currentLanguage() }}
                 </button>
@@ -194,7 +194,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                   <a
                     [routerLink]="['/data-explorer', searchResource.value()!.name]"
                     (click)="svc.setSelected(searchResource.value()!.name)"
-                    class="inline-flex items-center gap-2 rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red transition-colors no-underline"
+                    class="inline-flex items-center gap-2 rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors no-underline"
                   >
                     {{ 'common.learnMore' | translate : ts.currentLanguage() }}
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -264,7 +264,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                   <button
                     (click)="listResource.reload()"
                     type="button"
-                    class="rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red transition-colors"
+                  class="rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
                   >
                     {{ 'common.retry' | translate : ts.currentLanguage() }}
                   </button>
@@ -289,8 +289,9 @@ type PageSize = (typeof PAGE_SIZES)[number];
                         <button
                           (click)="copy($event, svc.extractId(item.url).toString(), 'id-' + item.name)"
                           type="button"
-                          class="shrink-0 opacity-0 group-hover:opacity-40 hover:!opacity-100 text-neutral-400 transition-opacity"
+                          class="shrink-0 opacity-0 group-hover:opacity-40 hover:!opacity-100 text-neutral-400 focus:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-opacity"
                           title="Copiar ID"
+                          aria-label="Copiar ID"
                         >
                           @if (copiedKey() === 'id-' + item.name) {
                             <svg class="h-3 w-3 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
@@ -319,8 +320,9 @@ type PageSize = (typeof PAGE_SIZES)[number];
                         <button
                           (click)="copy($event, svc.capitalize(item.name), 'name-' + item.name)"
                           type="button"
-                          class="shrink-0 opacity-0 group-hover:opacity-40 hover:!opacity-100 text-neutral-400 transition-opacity"
+                          class="shrink-0 opacity-0 group-hover:opacity-40 hover:!opacity-100 text-neutral-400 focus:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-opacity"
                           title="Copiar nombre"
+                          aria-label="Copiar nombre"
                         >
                           @if (copiedKey() === 'name-' + item.name) {
                             <svg class="h-3 w-3 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
@@ -368,7 +370,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                         <a
                           [routerLink]="['/data-explorer', item.name]"
                           (click)="openDetail($event, item.name)"
-                          class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 hover:border-angular-red/50 hover:text-angular-red hover:bg-angular-red/5 transition-colors no-underline"
+                          class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 hover:border-angular-red/50 hover:text-angular-red hover:bg-angular-red/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors no-underline"
                           [attr.aria-label]="'dataExplorer.col.action' | translate : ts.currentLanguage()"
                         >
                           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -409,7 +411,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                         <a
                           [routerLink]="['/data-explorer', item.name]"
                           (click)="openDetail($event, item.name)"
-                          class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 hover:border-angular-red/50 hover:text-angular-red transition-colors no-underline"
+                          class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 hover:border-angular-red/50 hover:text-angular-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors no-underline"
                           [attr.aria-label]="'dataExplorer.col.action' | translate : ts.currentLanguage()"
                         >
                           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -421,12 +423,12 @@ type PageSize = (typeof PAGE_SIZES)[number];
                     </div>
 
                     <!-- Mobile card -->
-                    <div class="flex md:hidden items-center gap-3 px-4 py-3">
-                      <div class="h-14 w-14 shrink-0 rounded-lg bg-surface-700/50 flex items-center justify-center">
+                    <div class="flex md:hidden items-center gap-3 px-3 py-3">
+                      <div class="h-12 w-12 shrink-0 rounded-lg bg-surface-700/50 flex items-center justify-center">
                         <img
                           [src]="svc.artworkUrl(svc.extractId(item.url))"
                           [alt]="svc.capitalize(item.name)"
-                          class="h-12 w-12 object-contain transition-transform duration-200 group-hover:scale-110"
+                          class="h-10 w-10 object-contain transition-transform duration-200 group-hover:scale-110"
                           loading="lazy"
                         />
                       </div>
@@ -447,7 +449,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                       <a
                         [routerLink]="['/data-explorer', item.name]"
                         (click)="openDetail($event, item.name)"
-                        class="shrink-0 p-2 rounded-lg border border-neutral-700 text-neutral-500 hover:text-angular-red hover:border-angular-red/40 transition-colors no-underline"
+                        class="shrink-0 p-2 rounded-lg border border-neutral-700 text-neutral-500 hover:text-angular-red hover:border-angular-red/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors no-underline"
                         [attr.aria-label]="'dataExplorer.col.action' | translate : ts.currentLanguage()"
                       >
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -472,7 +474,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                   <span class="text-neutral-300 font-medium">{{ totalCount() }}</span>
                 </p>
 
-                <div class="flex items-center gap-3 ml-auto">
+                <div class="flex w-full items-center justify-between gap-3 sm:ml-auto sm:w-auto sm:justify-end">
                   <span class="text-xs text-neutral-400">
                     {{ 'paginator.page' | translate : ts.currentLanguage() }}
                     <span class="font-medium text-neutral-200 mx-1">{{ currentPage() }}</span>
@@ -484,7 +486,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                       (click)="prevPage()"
                       [disabled]="currentPage() <= 1"
                       type="button"
-                      class="inline-flex items-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-700 enabled:hover:text-neutral-100"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-700 enabled:hover:text-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red"
                     >
                       <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -495,7 +497,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                       (click)="nextPage()"
                       [disabled]="currentPage() >= totalPages()"
                       type="button"
-                      class="inline-flex items-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-700 enabled:hover:text-neutral-100"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-700 enabled:hover:text-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red"
                     >
                       <span class="hidden sm:inline">{{ 'paginator.next' | translate : ts.currentLanguage() }}</span>
                       <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
