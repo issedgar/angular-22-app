@@ -1,9 +1,13 @@
 ﻿import {
   Component,
   computed,
+  inject,
   resource,
   signal,
 } from '@angular/core';
+
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translation.pipe';
 import { httpResource } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Observable, delay, of, throwError } from 'rxjs';
@@ -31,6 +35,7 @@ const FAKE_POSTS: Post[] = Array.from({ length: 6 }, (_, i) => ({
 
 @Component({
   selector: 'app-resources',
+  imports: [TranslatePipe],
   template: `
     <div class="w-full space-y-8">
 
@@ -38,7 +43,7 @@ const FAKE_POSTS: Post[] = Array.from({ length: 6 }, (_, i) => ({
       <div>
         <div class="flex items-center gap-3 mb-1">
           <h1 class="text-2xl font-bold text-neutral-100">Resource API</h1>
-          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">Stable</span>
+          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
         </div>
         <p class="text-neutral-400 text-sm">
           <code class="text-angular-red">resource()</code>,
@@ -349,6 +354,8 @@ const FAKE_POSTS: Post[] = Array.from({ length: 6 }, (_, i) => ({
   `,
 })
 export class Resources {
+  protected readonly ts = inject(TranslationService);
+
   // ── resource() demo ──────────────────────────────────────────
   protected readonly resourceDelay = signal(500);
 

@@ -1,4 +1,4 @@
-﻿import { Component, computed, signal } from '@angular/core';
+﻿import { Component, computed, inject, signal } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -9,6 +9,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
+
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translation.pipe';
 
 // Custom validator: passwords must match
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -26,19 +29,17 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
 
 @Component({
   selector: 'app-reactive-forms',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TranslatePipe],
   template: `
     <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>
         <div class="flex items-center gap-3 mb-1">
-          <h1 class="text-2xl font-bold text-neutral-100">Reactive Forms</h1>
-          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">Stable</span>
+          <h1 class="text-2xl font-bold text-neutral-100">{{ 'nav.reactiveForms' | translate : ts.currentLanguage() }}</h1>
+          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
         </div>
-        <p class="text-neutral-400 text-sm">
-          FormGroup · FormControl · FormArray · Validators · Cross-field validation · Dynamic fields
-        </p>
+        <p class="text-neutral-400 text-sm">{{ 'reactiveForms.subtitle' | translate : ts.currentLanguage() }}</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -52,57 +53,57 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
             <form [formGroup]="regForm" (ngSubmit)="submitReg()" class="space-y-3" novalidate>
               <!-- Email -->
               <div class="space-y-1">
-                <label class="text-xs text-neutral-500">Email</label>
+                <label class="text-xs text-neutral-500">{{ 'forms.email' | translate : ts.currentLanguage() }}</label>
                 <input
                   formControlName="email"
                   type="email"
-                  placeholder="user@example.com"
+                  [placeholder]="'forms.emailPlaceholder' | translate : ts.currentLanguage()"
                   class="w-full rounded-lg border px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none transition-colors"
                   [class.border-neutral-700]="!isInvalid(regEmail)"
                   [class.border-red-600]="isInvalid(regEmail)"
                   [class.focus:border-angular-red]="!isInvalid(regEmail)"
                 />
                 @if (isInvalid(regEmail) && regEmail.errors?.['required']) {
-                  <p class="text-[10px] text-red-400">Email is required</p>
+                  <p class="text-[10px] text-red-400">{{ 'forms.errors.emailRequired' | translate : ts.currentLanguage() }}</p>
                 }
                 @if (isInvalid(regEmail) && regEmail.errors?.['email']) {
-                  <p class="text-[10px] text-red-400">Enter a valid email address</p>
+                  <p class="text-[10px] text-red-400">{{ 'forms.errors.emailInvalid' | translate : ts.currentLanguage() }}</p>
                 }
               </div>
               <!-- Password -->
               <div class="space-y-1">
-                <label class="text-xs text-neutral-500">Password</label>
+                <label class="text-xs text-neutral-500">{{ 'forms.password' | translate : ts.currentLanguage() }}</label>
                 <input
                   formControlName="password"
                   type="password"
-                  placeholder="Min 8 characters"
+                  [placeholder]="'forms.passwordPlaceholder' | translate : ts.currentLanguage()"
                   class="w-full rounded-lg border px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none transition-colors"
                   [class.border-neutral-700]="!isInvalid(regPassword)"
                   [class.border-red-600]="isInvalid(regPassword)"
                 />
                 @if (isInvalid(regPassword) && regPassword.errors?.['required']) {
-                  <p class="text-[10px] text-red-400">Password is required</p>
+                  <p class="text-[10px] text-red-400">{{ 'forms.errors.passwordRequired' | translate : ts.currentLanguage() }}</p>
                 }
                 @if (isInvalid(regPassword) && regPassword.errors?.['minlength']) {
-                  <p class="text-[10px] text-red-400">Minimum 8 characters</p>
+                  <p class="text-[10px] text-red-400">{{ 'forms.errors.passwordMinLength' | translate : ts.currentLanguage() }}</p>
                 }
                 @if (isInvalid(regPassword) && regPassword.errors?.['noRepeat']) {
-                  <p class="text-[10px] text-red-400">Avoid repeated characters</p>
+                  <p class="text-[10px] text-red-400">{{ 'forms.errors.noRepeat' | translate : ts.currentLanguage() }}</p>
                 }
               </div>
               <!-- Confirm -->
               <div class="space-y-1">
-                <label class="text-xs text-neutral-500">Confirm password</label>
+                <label class="text-xs text-neutral-500">{{ 'forms.confirmPassword' | translate : ts.currentLanguage() }}</label>
                 <input
                   formControlName="confirm"
                   type="password"
-                  placeholder="Repeat password"
+                  [placeholder]="'forms.repeatPasswordPlaceholder' | translate : ts.currentLanguage()"
                   class="w-full rounded-lg border px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none transition-colors"
                   [class.border-neutral-700]="!regForm.errors?.['passwordMismatch']"
                   [class.border-red-600]="regForm.errors?.['passwordMismatch'] && regConfirm.touched"
                 />
                 @if (regForm.errors?.['passwordMismatch'] && regConfirm.touched) {
-                  <p class="text-[10px] text-red-400">Passwords do not match</p>
+                  <p class="text-[10px] text-red-400">{{ 'forms.errors.passwordMismatch' | translate : ts.currentLanguage() }}</p>
                 }
               </div>
               <!-- Status -->
@@ -117,7 +118,7 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
                 type="submit"
                 [disabled]="regForm.invalid"
                 class="w-full rounded-lg bg-angular-red py-2 text-xs font-medium text-white transition-colors hover:bg-angular-dark-red disabled:opacity-40 disabled:cursor-not-allowed"
-              >Register</button>
+              >{{ 'forms.register' | translate : ts.currentLanguage() }}</button>
             </form>
             @if (regResult()) {
               <div class="rounded-lg border border-green-800/30 bg-green-900/10 px-3 py-2 text-xs text-green-400">
@@ -134,7 +135,7 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
             <h2 class="text-sm font-semibold text-neutral-200">FormArray — dynamic fields</h2>
           </div>
           <div class="p-5 space-y-4">
-            <p class="text-xs text-neutral-500">Add or remove skill entries at runtime using FormArray.</p>
+            <p class="text-xs text-neutral-500">{{ 'reactiveForms.formArrayDesc' | translate : ts.currentLanguage() }}</p>
             <form [formGroup]="skillsForm" (ngSubmit)="submitSkills()" class="space-y-3" novalidate>
               <div formArrayName="skills" class="space-y-2">
                 @for (ctrl of skillControls; track $index; let i = $index) {
@@ -158,12 +159,12 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
                 type="button"
                 (click)="addSkill()"
                 class="w-full rounded-lg border border-dashed border-neutral-700 py-2 text-xs text-neutral-500 hover:border-neutral-500 hover:text-neutral-300 transition-colors"
-              >+ Add skill</button>
+              >{{ 'forms.addSkill' | translate : ts.currentLanguage() }}</button>
               <button
                 type="submit"
                 [disabled]="skillsForm.invalid"
                 class="w-full rounded-lg bg-angular-red py-2 text-xs font-medium text-white transition-colors hover:bg-angular-dark-red disabled:opacity-40 disabled:cursor-not-allowed"
-              >Save skills</button>
+              >{{ 'forms.saveSkills' | translate : ts.currentLanguage() }}</button>
             </form>
             @if (skillsResult()) {
               <div class="rounded-lg border border-green-800/30 bg-green-900/10 px-3 py-2 text-xs text-green-400">
@@ -189,7 +190,7 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
             <input
               [formControl]="searchControl"
               type="text"
-              placeholder="Type to search…"
+              [placeholder]="'reactiveForms.typeToSearch' | translate : ts.currentLanguage()"
               class="w-full rounded-lg border border-neutral-700 px-3 py-2 text-xs bg-surface-800 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-angular-red/50 transition-colors"
             />
             <div class="rounded-lg border border-neutral-800 bg-surface-800 p-4 space-y-2 text-xs">
@@ -220,11 +221,11 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
         <!-- 4. Validators summary -->
         <div class="rounded-2xl border border-neutral-800 bg-surface-900 overflow-hidden">
           <div class="px-5 py-3 border-b border-neutral-800 bg-surface-800/50">
-            <h2 class="text-sm font-semibold text-neutral-200">Built-in Validators</h2>
+            <h2 class="text-sm font-semibold text-neutral-200">{{ 'reactiveForms.builtInValidators' | translate : ts.currentLanguage() }}</h2>
           </div>
           <div class="p-5 space-y-3">
             <div class="divide-y divide-neutral-800/50 text-xs">
-              @for (v of validatorDocs; track v.name) {
+              @for (v of validatorDocs(); track v.name) {
                 <div class="py-2.5 grid grid-cols-[120px_1fr]">
                   <code class="text-angular-red">{{ v.name }}</code>
                   <span class="text-neutral-500">{{ v.desc }}</span>
@@ -240,6 +241,8 @@ function noRepeatValidator(control: AbstractControl): ValidationErrors | null {
   `,
 })
 export class ReactiveForms {
+  protected readonly ts = inject(TranslationService);
+
   // ── FormGroup with cross-field validation ──────────────────────────────────
   protected readonly regEmail    = new FormControl('', [Validators.required, Validators.email]);
   protected readonly regPassword = new FormControl('', [Validators.required, Validators.minLength(8), noRepeatValidator]);
@@ -254,7 +257,7 @@ export class ReactiveForms {
 
   protected submitReg(): void {
     if (this.regForm.invalid) return;
-    this.regResult.set(`Registered: ${this.regEmail.value}`);
+    this.regResult.set(`${this.ts.translate('reactiveForms.registered')} ${this.regEmail.value}`);
     this.regForm.reset();
     setTimeout(() => this.regResult.set(''), 4000);
   }
@@ -281,7 +284,7 @@ export class ReactiveForms {
 
   protected submitSkills(): void {
     const skills = this.skillsArray.value.filter(Boolean).join(', ');
-    this.skillsResult.set(`Saved: ${skills}`);
+    this.skillsResult.set(`${this.ts.translate('reactiveForms.saved')} ${skills}`);
     setTimeout(() => this.skillsResult.set(''), 4000);
   }
 
@@ -303,18 +306,18 @@ export class ReactiveForms {
     return ctrl.invalid && (ctrl.dirty || ctrl.touched);
   }
 
-  protected readonly validatorDocs = [
-    { name: 'required',      desc: 'Control value must be non-empty.' },
-    { name: 'email',         desc: 'Value must match an email pattern.' },
-    { name: 'minLength(n)',  desc: 'Value length must be ≥ n.' },
-    { name: 'maxLength(n)',  desc: 'Value length must be ≤ n.' },
-    { name: 'min(n)',        desc: 'Numeric value must be ≥ n.' },
-    { name: 'max(n)',        desc: 'Numeric value must be ≤ n.' },
-    { name: 'pattern(r)',   desc: 'Value must match the RegExp r.' },
-    { name: 'nullValidator', desc: 'Always returns null (valid).' },
-    { name: 'compose()',     desc: 'Combine multiple sync validators.' },
-    { name: 'composeAsync()',desc: 'Combine multiple async validators.' },
-  ];
+  protected readonly validatorDocs = computed(() => [
+    { name: 'required',       desc: this.ts.translate('reactiveForms.validators.required') },
+    { name: 'email',          desc: this.ts.translate('reactiveForms.validators.email') },
+    { name: 'minLength(n)',   desc: this.ts.translate('reactiveForms.validators.minLength') },
+    { name: 'maxLength(n)',   desc: this.ts.translate('reactiveForms.validators.maxLength') },
+    { name: 'min(n)',         desc: this.ts.translate('reactiveForms.validators.min') },
+    { name: 'max(n)',         desc: this.ts.translate('reactiveForms.validators.max') },
+    { name: 'pattern(r)',     desc: this.ts.translate('reactiveForms.validators.pattern') },
+    { name: 'nullValidator',  desc: this.ts.translate('reactiveForms.validators.nullValidator') },
+    { name: 'compose()',      desc: this.ts.translate('reactiveForms.validators.compose') },
+    { name: 'composeAsync()', desc: this.ts.translate('reactiveForms.validators.composeAsync') },
+  ]);
 
   protected readonly snippets = {
     formGroup: `const form = new FormGroup(

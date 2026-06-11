@@ -108,6 +108,160 @@
     "sections": "Secciones",
     "builtWith": "Construido con Angular 22"
   },
+  "forms": {
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "emailPlaceholder": "usuario@ejemplo.com",
+    "passwordPlaceholder": "Mín. 8 caracteres",
+    "repeatPasswordPlaceholder": "Repetir contraseña",
+    "register": "Registrar",
+    "registering": "Registrando…",
+    "saveSkills": "Guardar habilidades",
+    "addSkill": "+ Agregar habilidad",
+    "errors": {
+      "emailRequired": "El correo es requerido",
+      "emailInvalid": "Ingresa un correo válido",
+      "passwordRequired": "La contraseña es requerida",
+      "passwordMinLength": "Mínimo 8 caracteres",
+      "noRepeat": "Evita caracteres repetidos",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    }
+  },
+  "signalForms": {
+    "registrationForm": "Formulario de Registro",
+    "username": "Usuario",
+    "usernamePlaceholder": "ej. john_doe",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "passwordPlaceholder": "Mín. 8 caracteres",
+    "checkingAvailability": "Verificando disponibilidad…",
+    "registrationSuccess": "¡Registro exitoso!",
+    "welcome": "Bienvenido/a,",
+    "liveFormState": "Estado del formulario",
+    "perFieldState": "Estado por campo"
+  },
+  "reactiveForms": {
+    "subtitle": "FormGroup · FormControl · FormArray · Validators · Validación cruzada · Campos dinámicos",
+    "formArrayDesc": "Agrega o elimina entradas en tiempo de ejecución usando FormArray.",
+    "typeToSearch": "Escribe para buscar…",
+    "builtInValidators": "Validadores Integrados",
+    "registered": "Registrado:",
+    "saved": "Guardado:",
+    "validators": {
+      "required": "El valor del control no puede estar vacío.",
+      "email": "El valor debe coincidir con un patrón de correo.",
+      "minLength": "La longitud del valor debe ser ≥ n.",
+      "maxLength": "La longitud del valor debe ser ≤ n.",
+      "min": "El valor numérico debe ser ≥ n.",
+      "max": "El valor numérico debe ser ≤ n.",
+      "pattern": "El valor debe coincidir con la expresión regular r.",
+      "nullValidator": "Siempre retorna null (válido).",
+      "compose": "Combina múltiples validadores síncronos.",
+      "composeAsync": "Combina múltiples validadores asíncronos."
+    }
+  },
+  "templates": {
+    "score": "Puntaje:",
+    "value": "valor:",
+    "excellent": "Excelente",
+    "good": "Bueno",
+    "average": "Regular",
+    "needsWork": "Necesita mejorar",
+    "showAll": "Mostrar todo",
+    "hideAll": "Ocultar todo",
+    "frameworksOnly": "solo frameworks",
+    "load": "Cargar",
+    "hide": "Ocultar",
+    "deferredLoaded": "¡Bloque diferido cargado!",
+    "deferredDesc": "Este bloque se renderizó de forma diferida cuando el disparador se activó.",
+    "letDesc": "@let declara variables de plantilla de alcance de bloque. Útil para crear alias de cálculos costosos o valores procesados por pipes.",
+    "deferDesc": "@defer carga de forma diferida un bloque de plantilla bajo una condición de disparador. Reduce el tamaño del bundle inicial.",
+    "seasons": {
+      "spring": "🌸 Primavera — nuevo crecimiento, renovación, componentes iniciando",
+      "summer": "☀️ Verano — máximo rendimiento, detección de cambios a pleno",
+      "autumn": "🍂 Otoño — lifecycle hooks ejecutándose, tiempo de limpieza",
+      "winter": "❄️ Invierno — estado inactivo, esperando el próximo ciclo de render"
+    }
+  },
+  "router": {
+    "currentRouteState": "Estado de Ruta Actual",
+    "urlLabel": "URL",
+    "routePath": "Ruta",
+    "titleLabel": "Título",
+    "routerLinkDesc": "Navegación declarativa con detección de estado activo.",
+    "tryNavigating": "Navega a",
+    "guardsDesc": "Guards funcionales con inject(). No requieren clase.",
+    "simulateLoggedIn": "Simular sesión iniciada",
+    "navigateProtected": "Navegar a ruta protegida",
+    "navigateEvents": "Navega entre rutas para ver los eventos…",
+    "guardPassed": "✓ Guard aprobado — navegación permitida.",
+    "guardBlocked": "✗ Guard bloqueado — redirigido al login.",
+    "lazyLoadingTitle": "Lazy loading",
+    "lazyLoadingPart1": "— cada ruta de feature en esta app usa",
+    "lazyLoadingPart2": "en",
+    "lazyLoadingPart3": ". Cada chunk se carga bajo demanda. Puedes verificarlo en la pestaña Network — los chunks se obtienen solo cuando se visita la ruta por primera vez.",
+    "routeParamsDesc": "Con withComponentInputBinding() en provideRouter(), los params de ruta se mapean directamente a signals input().",
+    "eventsTitle": "Eventos del Router",
+    "eventsDesc": "router.events es un Observable — usa toSignal() para conectar con signals."
+  },
+  "di": {
+    "injectDesc": "reemplaza la inyección por constructor. Funciona en cualquier contexto de inyección — componente, servicio, guard, factory.",
+    "toggleTheme": "Cambiar tema",
+    "serviceDesc": "es un atajo estable de Angular 22 para @Injectable({ providedIn: 'root' }). Los servicios usan inject() para sus propias dependencias.",
+    "singleton": "Singleton (providedIn: 'root')",
+    "usesInject": "Usa inject() internamente",
+    "signalState": "Estado basado en signals",
+    "tokenDesc": "provee DI tipado para valores no-clase: configs, feature flags, valores de entorno.",
+    "injectedConfig": "Valor inyectado de APP_CONFIG:",
+    "logFromComponent": "Log desde componente",
+    "logFromService": "Log desde servicio",
+    "logEmptyState": "Haz clic en un botón para registrar una entrada…",
+    "hierarchy": "Jerarquía de DI en Angular",
+    "levels": {
+      "root": "Singleton a nivel de aplicación. Compartido por todos los componentes.",
+      "platform": "Compartido entre múltiples apps Angular en la misma página.",
+      "component": "Nueva instancia por componente. Se destruye con el componente.",
+      "element": "Proveído via viewProviders para aislamiento en proyección de contenido."
+    }
+  },
+  "aria": {
+    "subtitle": "Patrones ARIA oficiales de Angular — Accordion · Tabs · Listbox · Regiones Live",
+    "wcagTitle": "Lista de verificación WCAG AA",
+    "wcag": {
+      "contrast": { "label": "Contraste 4.5:1", "desc": "Ratio mínimo texto normal" },
+      "keyboard": { "label": "Nav por teclado", "desc": "Todos los controles accesibles" },
+      "focus": { "label": "Foco visible", "desc": "Anillo de foco siempre visible" },
+      "semantic": { "label": "HTML semántico", "desc": "Usar elementos según propósito" },
+      "roles": { "label": "Roles ARIA", "desc": "Solo cuando el nativo no alcanza" },
+      "live": { "label": "Regiones live", "desc": "Anunciar contenido dinámico" }
+    },
+    "accordion": {
+      "q1": "¿Qué son los signals de Angular?",
+      "a1": "Los signals son primitivos reactivos que Angular usa para rastrear dependencias y actualizar el DOM de forma eficiente. Reemplazan zone.js para la detección de cambios.",
+      "q2": "¿Cuándo usar computed() vs effect()?",
+      "a2": "Usa computed() para derivar valores de signals — memoriza y re-ejecuta solo cuando sus dependencias cambian. Usa effect() solo para efectos secundarios como logging, manipulación del DOM o analítica.",
+      "q3": "¿Qué es la arquitectura standalone?",
+      "a3": "Angular 17+ hace standalone el valor por defecto. Los componentes declaran su propio array de imports, eliminando la necesidad de NgModules."
+    },
+    "tabs": {
+      "wcag": "WCAG AA",
+      "keyboard": "Teclado",
+      "screen": "Lectores de pantalla",
+      "wcagContent": "WCAG AA requiere un ratio de contraste mínimo de 4.5:1 para texto normal y 3:1 para texto grande. Las plantillas Angular deben usar HTML semántico y proporcionar suficiente contraste de color.",
+      "keyboardContent": "Todos los elementos interactivos deben ser accesibles por teclado. Usa tabindex, gestión de foco y roles ARIA para que los usuarios puedan navegar sin ratón.",
+      "screenContent": "Las aplicaciones Angular deben anunciar cambios de contenido dinámico con regiones aria-live. Usa aria-label, aria-labelledby y aria-describedby para proporcionar contexto."
+    },
+    "selected": "Seleccionado:",
+    "liveTitle": "Región Live",
+    "liveSubtitle": "aria-live · aria-atomic · anuncios de estado",
+    "liveDesc": "aria-live anuncia contenido dinámico a lectores de pantalla. Usa polite para actualizaciones no críticas, assertive para errores.",
+    "announceSuccess": "Anunciar éxito (polite)",
+    "announceSuccessMsg": "¡Datos guardados exitosamente!",
+    "announceError": "Anunciar error (assertive)",
+    "announceErrorMsg": "¡Error: conexión fallida!",
+    "politeSilent": "región polite — silenciosa",
+    "assertiveSilent": "región assertive — silenciosa"
+  },
   "sections": {
     "dataExplorer": {
       "title": "Explorador de Datos",

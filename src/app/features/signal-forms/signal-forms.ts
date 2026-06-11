@@ -1,4 +1,4 @@
-﻿import { Component, computed, resource, signal } from '@angular/core';
+﻿import { Component, computed, inject, resource, signal } from '@angular/core';
 import {
   FormField,
   FormRoot,
@@ -13,6 +13,9 @@ import {
   validateAsync,
 } from '@angular/forms/signals';
 
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translation.pipe';
+
 interface RegModel {
   username: string;
   email: string;
@@ -23,15 +26,15 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
 
 @Component({
   selector: 'app-signal-forms',
-  imports: [FormRoot, FormField],
+  imports: [FormRoot, FormField, TranslatePipe],
   template: `
     <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>
         <div class="flex items-center gap-3 mb-1">
-          <h1 class="text-2xl font-bold text-neutral-100">Signal Forms</h1>
-          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">Stable</span>
+          <h1 class="text-2xl font-bold text-neutral-100">{{ 'nav.signalForms' | translate : ts.currentLanguage() }}</h1>
+          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
         </div>
         <p class="text-neutral-400 text-sm">
           <code class="text-angular-red">form()</code>,
@@ -47,7 +50,7 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
         <div class="space-y-6">
           <div class="rounded-2xl border border-neutral-800 bg-surface-900 overflow-hidden">
             <div class="px-6 py-4 border-b border-neutral-800 bg-surface-800/50">
-              <h2 class="text-sm font-semibold text-neutral-200">Registration Form</h2>
+              <h2 class="text-sm font-semibold text-neutral-200">{{ 'signalForms.registrationForm' | translate : ts.currentLanguage() }}</h2>
               <p class="text-xs text-neutral-500 mt-0.5">Signal Forms &#64;angular/forms/signals</p>
             </div>
 
@@ -61,7 +64,7 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
               <!-- Username -->
               <div class="space-y-1.5">
                 <label for="username" class="block text-sm font-medium text-neutral-300">
-                  Username
+                  {{ 'signalForms.username' | translate : ts.currentLanguage() }}
                   <span class="text-angular-red ml-0.5">*</span>
                 </label>
                 <div class="relative">
@@ -69,7 +72,7 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
                     id="username"
                     type="text"
                     [formField]="regForm.username"
-                    placeholder="e.g. john_doe"
+                    [placeholder]="'signalForms.usernamePlaceholder' | translate : ts.currentLanguage()"
                     class="w-full rounded-lg border px-3 py-2.5 text-sm bg-surface-800 text-neutral-100 placeholder-neutral-600 outline-none transition-colors
                       focus:ring-2 focus:ring-angular-red/30"
                     [class.border-red-500]="regForm.username().touched() && regForm.username().invalid()"
@@ -101,7 +104,7 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
                   </div>
                 }
                 @if (regForm.username().pending()) {
-                  <p class="text-xs text-amber-400/80">Checking availability…</p>
+                  <p class="text-xs text-amber-400/80">{{ 'signalForms.checkingAvailability' | translate : ts.currentLanguage() }}</p>
                 }
                 <p class="text-xs text-neutral-600">
                   Validators: required · minLength(3) · pattern · debounce(300ms) · validateAsync
@@ -111,14 +114,14 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
               <!-- Email -->
               <div class="space-y-1.5">
                 <label for="email" class="block text-sm font-medium text-neutral-300">
-                  Email
+                  {{ 'forms.email' | translate : ts.currentLanguage() }}
                   <span class="text-angular-red ml-0.5">*</span>
                 </label>
                 <input
                   id="email"
                   type="email"
                   [formField]="regForm.email"
-                  placeholder="you@example.com"
+                  [placeholder]="'signalForms.emailPlaceholder' | translate : ts.currentLanguage()"
                   class="w-full rounded-lg border px-3 py-2.5 text-sm bg-surface-800 text-neutral-100 placeholder-neutral-600 outline-none transition-colors
                     focus:ring-2 focus:ring-angular-red/30"
                   [class.border-red-500]="regForm.email().touched() && regForm.email().invalid()"
@@ -136,14 +139,14 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
               <!-- Password -->
               <div class="space-y-1.5">
                 <label for="password" class="block text-sm font-medium text-neutral-300">
-                  Password
+                  {{ 'forms.password' | translate : ts.currentLanguage() }}
                   <span class="text-angular-red ml-0.5">*</span>
                 </label>
                 <input
                   id="password"
                   type="password"
                   [formField]="regForm.password"
-                  placeholder="Min 8 chars"
+                  [placeholder]="'signalForms.passwordPlaceholder' | translate : ts.currentLanguage()"
                   class="w-full rounded-lg border px-3 py-2.5 text-sm bg-surface-800 text-neutral-100 placeholder-neutral-600 outline-none transition-colors
                     focus:ring-2 focus:ring-angular-red/30"
                   [class.border-red-500]="regForm.password().touched() && regForm.password().invalid()"
@@ -184,9 +187,9 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
                     <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                       <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="31.4" stroke-dashoffset="10"/>
                     </svg>
-                    Registering…
+                    {{ 'forms.registering' | translate : ts.currentLanguage() }}
                   } @else {
-                    Register
+                    {{ 'forms.register' | translate : ts.currentLanguage() }}
                   }
                 </button>
               </div>
@@ -197,7 +200,9 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
                   <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  Registration successful! Welcome, <strong>{{ regForm.username().value() }}</strong>.
+                  {{ 'signalForms.registrationSuccess' | translate : ts.currentLanguage() }}
+                  {{ 'signalForms.welcome' | translate : ts.currentLanguage() }}
+                  <strong>{{ regForm.username().value() }}</strong>.
                 </div>
               }
               @if (submitStatus() === 'error') {
@@ -216,7 +221,7 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
           <!-- Live form state -->
           <div class="rounded-2xl border border-neutral-800 bg-surface-900 overflow-hidden">
             <div class="px-4 py-3 border-b border-neutral-800 bg-surface-800/50">
-              <h3 class="text-xs font-semibold uppercase tracking-wider text-neutral-500">Live Form State</h3>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-neutral-500">{{ 'signalForms.liveFormState' | translate : ts.currentLanguage() }}</h3>
             </div>
             <div class="p-4 grid grid-cols-2 gap-3 text-xs">
               <div class="space-y-2">
@@ -274,7 +279,7 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
           <!-- Per-field state -->
           <div class="rounded-2xl border border-neutral-800 bg-surface-900 overflow-hidden">
             <div class="px-4 py-3 border-b border-neutral-800 bg-surface-800/50">
-              <h3 class="text-xs font-semibold uppercase tracking-wider text-neutral-500">Per-field State</h3>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-neutral-500">{{ 'signalForms.perFieldState' | translate : ts.currentLanguage() }}</h3>
             </div>
             <div class="divide-y divide-neutral-800 text-xs font-mono">
               @for (f of fieldStates(); track f.name) {
@@ -337,6 +342,8 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
   `,
 })
 export class SignalForms {
+  protected readonly ts = inject(TranslationService);
+
   protected readonly takenList = TAKEN_USERNAMES.join(', ');
 
   protected readonly submitStatus = signal<'idle' | 'pending' | 'success' | 'error'>('idle');

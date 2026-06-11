@@ -9,17 +9,20 @@ import {
 import { filter, map } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translation.pipe';
+
 @Component({
   selector: 'app-router-demo',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, TranslatePipe],
   template: `
     <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>
         <div class="flex items-center gap-3 mb-1">
-          <h1 class="text-2xl font-bold text-neutral-100">Router</h1>
-          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">Stable</span>
+          <h1 class="text-2xl font-bold text-neutral-100">{{ 'nav.router' | translate : ts.currentLanguage() }}</h1>
+          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
         </div>
         <p class="text-neutral-400 text-sm">
           Route params · Guards · Lazy loading · Router events · <code class="text-angular-red">withComponentInputBinding()</code>
@@ -29,19 +32,19 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
       <!-- Current route info -->
       <div class="rounded-2xl border border-neutral-800 bg-surface-900 overflow-hidden">
         <div class="px-5 py-3 border-b border-neutral-800 bg-surface-800/50">
-          <h2 class="text-sm font-semibold text-neutral-200">Current Route State</h2>
+          <h2 class="text-sm font-semibold text-neutral-200">{{ 'router.currentRouteState' | translate : ts.currentLanguage() }}</h2>
         </div>
         <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono">
           <div class="space-y-1">
-            <p class="text-neutral-600 uppercase tracking-wider text-[10px]">URL</p>
+            <p class="text-neutral-600 uppercase tracking-wider text-[10px]">{{ 'router.urlLabel' | translate : ts.currentLanguage() }}</p>
             <p class="text-neutral-200 break-all">{{ currentUrl() }}</p>
           </div>
           <div class="space-y-1">
-            <p class="text-neutral-600 uppercase tracking-wider text-[10px]">Route path</p>
+            <p class="text-neutral-600 uppercase tracking-wider text-[10px]">{{ 'router.routePath' | translate : ts.currentLanguage() }}</p>
             <p class="text-neutral-200">{{ routePath() }}</p>
           </div>
           <div class="space-y-1">
-            <p class="text-neutral-600 uppercase tracking-wider text-[10px]">Title</p>
+            <p class="text-neutral-600 uppercase tracking-wider text-[10px]">{{ 'router.titleLabel' | translate : ts.currentLanguage() }}</p>
             <p class="text-neutral-200">{{ routeTitle() }}</p>
           </div>
         </div>
@@ -58,7 +61,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
             </h2>
           </div>
           <div class="p-5 space-y-4">
-            <p class="text-xs text-neutral-500">Declarative navigation with active state detection.</p>
+            <p class="text-xs text-neutral-500">{{ 'router.routerLinkDesc' | translate : ts.currentLanguage() }}</p>
             <nav class="flex flex-col gap-1">
               @for (link of navLinks; track link.path) {
                 <a
@@ -68,7 +71,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
                   class="rounded-lg border border-transparent px-3 py-2 text-sm text-neutral-400 hover:text-neutral-200 hover:border-neutral-700 transition-colors no-underline flex items-center gap-2"
                 >
                   <span class="text-base leading-none">{{ link.icon }}</span>
-                  {{ link.label }}
+                  {{ link.labelKey | translate : ts.currentLanguage() }}
                   <span class="ml-auto text-[10px] font-mono text-neutral-600">{{ link.path }}</span>
                 </a>
               }
@@ -85,13 +88,9 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
             </h2>
           </div>
           <div class="p-5 space-y-4">
-            <p class="text-xs text-neutral-500">
-              With <code class="text-angular-red">withComponentInputBinding()</code> in
-              <code class="text-neutral-300">provideRouter()</code>, route params map
-              directly to <code class="text-angular-red">input()</code> signals.
-            </p>
+            <p class="text-xs text-neutral-500">{{ 'router.routeParamsDesc' | translate : ts.currentLanguage() }}</p>
             <div class="rounded-lg border border-neutral-800 bg-surface-800 p-4 space-y-3 text-xs">
-              <p class="text-neutral-400">Try navigating to <code class="text-neutral-200">/data-explorer/:name</code>:</p>
+              <p class="text-neutral-400">{{ 'router.tryNavigating' | translate : ts.currentLanguage() }} <code class="text-neutral-200">/data-explorer/:name</code>:</p>
               <div class="flex flex-wrap gap-2">
                 @for (name of pokemonLinks; track name) {
                   <a
@@ -111,7 +110,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
             <h2 class="text-sm font-semibold text-neutral-200">Guards — <code class="text-angular-red">CanMatch</code> · <code class="text-angular-red">CanActivate</code></h2>
           </div>
           <div class="p-5 space-y-4">
-            <p class="text-xs text-neutral-500">Functional guards with <code class="text-angular-red">inject()</code>. No class required.</p>
+            <p class="text-xs text-neutral-500">{{ 'router.guardsDesc' | translate : ts.currentLanguage() }}</p>
             <div class="space-y-2">
               <label class="flex items-center gap-2 text-sm text-neutral-400 cursor-pointer select-none">
                 <input
@@ -120,7 +119,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
                   (change)="isLoggedIn.set($any($event.target).checked)"
                   class="accent-angular-red"
                 />
-                Simulate logged in
+                {{ 'router.simulateLoggedIn' | translate : ts.currentLanguage() }}
               </label>
               <button
                 (click)="tryProtectedRoute()"
@@ -130,15 +129,14 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
                 [class.hover:bg-angular-red]="isLoggedIn()"
                 [class.border-neutral-700]="!isLoggedIn()"
                 [class.text-neutral-400]="!isLoggedIn()"
-              >Navigate to protected route</button>
+              >{{ 'router.navigateProtected' | translate : ts.currentLanguage() }}</button>
               @if (guardMessage()) {
                 <div
                   class="rounded-lg px-3 py-2 text-xs"
-                  [class.bg-green-900]="isLoggedIn()"
+                  [class.bg-green-900/10]="isLoggedIn()"
                   [class.text-green-400]="isLoggedIn()"
-                  [class.bg-red-900]="!isLoggedIn()"
+                  [class.bg-red-900/10]="!isLoggedIn()"
                   [class.text-red-400]="!isLoggedIn()"
-                  [class.bg-opacity-10]="true"
                 >{{ guardMessage() }}</div>
               }
             </div>
@@ -149,20 +147,17 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
         <!-- 4. Router events -->
         <div class="rounded-2xl border border-neutral-800 bg-surface-900 overflow-hidden">
           <div class="px-5 py-3 border-b border-neutral-800 bg-surface-800/50 flex items-center justify-between">
-            <h2 class="text-sm font-semibold text-neutral-200">Router Events</h2>
+            <h2 class="text-sm font-semibold text-neutral-200">{{ 'router.eventsTitle' | translate : ts.currentLanguage() }}</h2>
             <button
               (click)="clearLog()"
               class="text-[10px] text-neutral-600 hover:text-neutral-400 transition-colors"
             >clear</button>
           </div>
           <div class="p-5 space-y-4">
-            <p class="text-xs text-neutral-500">
-              <code class="text-angular-red">router.events</code> is an Observable — use
-              <code class="text-neutral-300">toSignal()</code> to bridge to signals.
-            </p>
+            <p class="text-xs text-neutral-500">{{ 'router.eventsDesc' | translate : ts.currentLanguage() }}</p>
             <div class="h-36 overflow-y-auto rounded-lg border border-neutral-800 bg-surface-800 p-3 space-y-1">
               @if (navLog().length === 0) {
-                <p class="text-xs text-neutral-600">Navigate between routes to see events…</p>
+                <p class="text-xs text-neutral-600">{{ 'router.navigateEvents' | translate : ts.currentLanguage() }}</p>
               }
               @for (entry of navLog(); track $index) {
                 <div class="flex items-center gap-2 text-[11px] font-mono">
@@ -186,10 +181,11 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
           </svg>
         </div>
         <div class="text-xs text-neutral-400 leading-relaxed">
-          <strong class="text-blue-400">Lazy loading</strong> — every feature route in this app uses
-          <code class="text-neutral-300">loadComponent: () =&gt; import(...)</code> in
-          <code class="text-neutral-300">app.routes.ts</code>. Each chunk loads on demand.
-          You can verify this in the Network tab — chunks are fetched only when the route is first visited.
+          <strong class="text-blue-400">{{ 'router.lazyLoadingTitle' | translate : ts.currentLanguage() }}</strong>
+          {{ 'router.lazyLoadingPart1' | translate : ts.currentLanguage() }}
+          <code class="text-neutral-300">loadComponent: () =&gt; import(...)</code>
+          {{ 'router.lazyLoadingPart2' | translate : ts.currentLanguage() }}
+          <code class="text-neutral-300">app.routes.ts</code>{{ 'router.lazyLoadingPart3' | translate : ts.currentLanguage() }}
         </div>
       </div>
 
@@ -197,6 +193,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
   `,
 })
 export class RouterDemo {
+  protected readonly ts = inject(TranslationService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -206,10 +203,10 @@ export class RouterDemo {
   protected readonly navLog = signal<{ time: string; url: string }[]>([]);
 
   protected readonly navLinks = [
-    { path: '/', label: 'Dashboard', icon: '🏠', exact: true },
-    { path: '/signals', label: 'Signals', icon: '⚡', exact: false },
-    { path: '/signal-forms', label: 'Signal Forms', icon: '📝', exact: false },
-    { path: '/resources', label: 'Resource API', icon: '🌐', exact: false },
+    { path: '/', labelKey: 'nav.dashboard', icon: '🏠', exact: true },
+    { path: '/signals', labelKey: 'nav.signals', icon: '⚡', exact: false },
+    { path: '/signal-forms', labelKey: 'nav.signalForms', icon: '📝', exact: false },
+    { path: '/resources', labelKey: 'nav.resourceApi', icon: '🌐', exact: false },
   ];
 
   protected readonly pokemonLinks = ['pikachu', 'bulbasaur', 'charizard', 'mewtwo'];
@@ -251,9 +248,9 @@ export class RouterDemo {
 
   protected tryProtectedRoute(): void {
     if (this.isLoggedIn()) {
-      this.guardMessage.set('✓ Guard passed — navigation allowed.');
+      this.guardMessage.set(this.ts.translate('router.guardPassed'));
     } else {
-      this.guardMessage.set('✗ Guard blocked — redirected to login.');
+      this.guardMessage.set(this.ts.translate('router.guardBlocked'));
     }
     setTimeout(() => this.guardMessage.set(''), 3000);
   }

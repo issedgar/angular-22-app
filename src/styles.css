@@ -96,6 +96,20 @@ html, body {
   border-color: rgba(245, 158, 11, 0.25);
 }
 
+/* ── Light theme: pastel accent text — darken for readability ──────────────── */
+/* green-300/400 (#86efac / #4ade80) are near-white on light surfaces.          */
+/* green-700 (#15803d) gives 5.1:1 contrast on white — WCAG AA compliant.       */
+[data-theme="light"] .text-green-300,
+[data-theme="light"] .text-green-400 {
+  color: #15803d;
+}
+
+/* emerald-400 (#34d399) is also near-white on light surfaces.                  */
+/* emerald-700 (#047857) matches the existing badge-stable override color.      */
+[data-theme="light"] .text-emerald-400 {
+  color: #047857;
+}
+
 /* ── Light theme hero gradient ─────────────────────────────────────────────── */
 [data-theme="light"] .hero-gradient {
   background: linear-gradient(to bottom right, #e2e8f0, #f1f5f9);

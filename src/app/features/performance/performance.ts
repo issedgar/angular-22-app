@@ -1,4 +1,7 @@
-﻿import { ChangeDetectionStrategy, Component, Pipe, PipeTransform, computed, effect, input, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, Pipe, PipeTransform, computed, effect, inject, input, signal } from '@angular/core';
+
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translation.pipe';
 
 interface ListItem {
   id: number;
@@ -44,7 +47,7 @@ class OnPushChild {
 @Component({
   selector: 'app-performance',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [OnPushChild, FormatScorePipe],
+  imports: [OnPushChild, FormatScorePipe, TranslatePipe],
   template: `
     <div class="w-full space-y-8">
 
@@ -52,7 +55,7 @@ class OnPushChild {
       <div>
         <div class="flex items-center gap-3 mb-1">
           <h1 class="text-2xl font-bold text-neutral-100">Performance</h1>
-          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">Stable</span>
+          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
         </div>
         <p class="text-neutral-400 text-sm">
           OnPush · Signals · Zoneless · <code class="text-angular-red">&#64;defer</code> · <code class="text-angular-red">track</code> · Pure pipes · Lazy routes
@@ -234,6 +237,8 @@ class OnPushChild {
   `,
 })
 export class Performance {
+  protected readonly ts = inject(TranslationService);
+
   protected readonly score = signal(50);
   protected readonly pipeInput = signal(123.456);
   protected parentRenders = 0;

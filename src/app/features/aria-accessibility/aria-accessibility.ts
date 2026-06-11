@@ -1,4 +1,7 @@
-﻿import { Component, signal } from '@angular/core';
+﻿import { Component, computed, inject, signal } from '@angular/core';
+
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translation.pipe';
 import {
   AccordionContent,
   AccordionGroup,
@@ -28,6 +31,7 @@ const LIST_OPTIONS: ListOption[] = [
     AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent,
     Tabs, TabList, Tab, TabPanel, TabContent,
     Listbox, Option,
+    TranslatePipe,
   ],
   template: `
     <div class="w-full space-y-8">
@@ -35,22 +39,22 @@ const LIST_OPTIONS: ListOption[] = [
       <!-- Header -->
       <div>
         <div class="flex items-center gap-3 mb-1">
-          <h1 class="text-2xl font-bold text-neutral-100">ARIA / Accessibility</h1>
+          <h1 class="text-2xl font-bold text-neutral-100">{{ 'nav.aria' | translate : ts.currentLanguage() }}</h1>
           <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-green-900/30 text-green-400 border border-green-800/30">&#64;angular/aria</span>
-          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">Stable</span>
+          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
         </div>
         <p class="text-neutral-400 text-sm">
-          Official Angular ARIA patterns — Accordion · Tabs · Listbox · Live regions
+          {{ 'aria.subtitle' | translate : ts.currentLanguage() }}
         </p>
       </div>
 
       <!-- WCAG quick checklist -->
       <div class="rounded-2xl border border-neutral-800 bg-surface-900 overflow-hidden">
         <div class="px-5 py-3 border-b border-neutral-800 bg-surface-800/50">
-          <h2 class="text-sm font-semibold text-neutral-200">WCAG AA Checklist</h2>
+          <h2 class="text-sm font-semibold text-neutral-200">{{ 'aria.wcagTitle' | translate : ts.currentLanguage() }}</h2>
         </div>
         <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
-          @for (item of wcagItems; track item.label) {
+          @for (item of wcagItems(); track item.key) {
             <div class="flex items-start gap-2.5 rounded-lg border border-neutral-800 bg-surface-800/40 px-3 py-2.5">
               <svg class="h-3.5 w-3.5 shrink-0 mt-0.5 text-green-400" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M9 16.2l-4.2-4.2-1.4 1.4L9 19 21 7l-1.4-1.4z"/>
@@ -76,7 +80,7 @@ const LIST_OPTIONS: ListOption[] = [
           </div>
           <div class="p-5 space-y-4">
             <div ngAccordionGroup class="space-y-1">
-              @for (item of accordionItems; track item.id) {
+              @for (item of accordionItems(); track item.id) {
                 <div>
                   <h3>
                     <button
@@ -122,7 +126,7 @@ const LIST_OPTIONS: ListOption[] = [
                 [(selectedTab)]="selectedTab"
                 class="flex gap-1 rounded-lg bg-surface-800 p-1 list-none m-0"
               >
-                @for (tab of tabItems; track tab.value) {
+                @for (tab of tabItems(); track tab.value) {
                   <li
                     ngTab
                     [value]="tab.value"
@@ -132,7 +136,7 @@ const LIST_OPTIONS: ListOption[] = [
                   >{{ tab.label }}</li>
                 }
               </ul>
-              @for (tab of tabItems; track tab.value) {
+              @for (tab of tabItems(); track tab.value) {
                 <div
                   ngTabPanel
                   [value]="tab.value"
@@ -158,7 +162,7 @@ const LIST_OPTIONS: ListOption[] = [
           </div>
           <div class="p-5 space-y-4">
             <p class="text-xs text-neutral-500">
-              Selected: <strong class="text-neutral-200">{{ selectedListValue()[0] ?? 'none' }}</strong>
+              {{ 'aria.selected' | translate : ts.currentLanguage() }} <strong class="text-neutral-200">{{ selectedListValue()[0] ?? 'none' }}</strong>
             </p>
             <ul
               ngListbox
@@ -186,37 +190,36 @@ const LIST_OPTIONS: ListOption[] = [
         <!-- 4. Live region -->
         <div class="rounded-2xl border border-neutral-800 bg-surface-900 overflow-hidden">
           <div class="px-5 py-3 border-b border-neutral-800 bg-surface-800/50">
-            <h2 class="text-sm font-semibold text-neutral-200">Live Region</h2>
-            <p class="text-[10px] text-neutral-600 mt-0.5">aria-live · aria-atomic · status announcements</p>
+            <h2 class="text-sm font-semibold text-neutral-200">{{ 'aria.liveTitle' | translate : ts.currentLanguage() }}</h2>
+            <p class="text-[10px] text-neutral-600 mt-0.5">{{ 'aria.liveSubtitle' | translate : ts.currentLanguage() }}</p>
           </div>
           <div class="p-5 space-y-4">
             <p class="text-xs text-neutral-500">
-              <code class="text-angular-red">aria-live</code> announces dynamic content to screen readers.
-              Use <code class="text-neutral-300">polite</code> for non-critical, <code class="text-neutral-300">assertive</code> for errors.
+              {{ 'aria.liveDesc' | translate : ts.currentLanguage() }}
             </p>
             <div class="space-y-2">
               <div class="flex flex-wrap gap-2">
                 <button
-                  (click)="announce('polite', 'Data saved successfully!')"
+                  (click)="announce('polite', ts.translate('aria.announceSuccessMsg'))"
                   class="rounded border border-green-800/40 bg-green-900/10 px-3 py-1.5 text-xs text-green-400 hover:bg-green-900/20 transition-colors"
-                >Announce success (polite)</button>
+                >{{ 'aria.announceSuccess' | translate : ts.currentLanguage() }}</button>
                 <button
-                  (click)="announce('assertive', 'Error: connection failed!')"
+                  (click)="announce('assertive', ts.translate('aria.announceErrorMsg'))"
                   class="rounded border border-red-800/40 bg-red-900/10 px-3 py-1.5 text-xs text-red-400 hover:bg-red-900/20 transition-colors"
-                >Announce error (assertive)</button>
+                >{{ 'aria.announceError' | translate : ts.currentLanguage() }}</button>
               </div>
               <div aria-live="polite" aria-atomic="true" class="rounded-lg border border-neutral-800 bg-surface-800 min-h-8 px-3 py-2 text-xs">
                 @if (politeMsg()) {
                   <p class="text-green-400">{{ politeMsg() }}</p>
                 } @else {
-                  <p class="text-neutral-600">polite region — silent</p>
+                  <p class="text-neutral-600">{{ 'aria.politeSilent' | translate : ts.currentLanguage() }}</p>
                 }
               </div>
               <div aria-live="assertive" aria-atomic="true" class="rounded-lg border border-neutral-800 bg-surface-800 min-h-8 px-3 py-2 text-xs">
                 @if (assertiveMsg()) {
                   <p class="text-red-400">{{ assertiveMsg() }}</p>
                 } @else {
-                  <p class="text-neutral-600">assertive region — silent</p>
+                  <p class="text-neutral-600">{{ 'aria.assertiveSilent' | translate : ts.currentLanguage() }}</p>
                 }
               </div>
             </div>
@@ -229,23 +232,25 @@ const LIST_OPTIONS: ListOption[] = [
   `,
 })
 export class AriaAccessibility {
+  protected readonly ts = inject(TranslationService);
+
   protected readonly listOptions = LIST_OPTIONS;
   protected readonly selectedTab = signal<string | undefined>('wcag');
   protected readonly selectedListValue = signal<string[]>([]);
   protected readonly politeMsg = signal('');
   protected readonly assertiveMsg = signal('');
 
-  protected readonly accordionItems = [
-    { id: 'a1', title: 'What are Angular signals?', content: 'Signals are reactive primitives that Angular uses to track dependencies and update the DOM efficiently. They replace zone.js for change detection.' },
-    { id: 'a2', title: 'When to use computed() vs effect()?', content: 'Use computed() to derive values from signals — it memoizes and re-runs only when its dependencies change. Use effect() only for side effects like logging, DOM manipulation, or analytics.' },
-    { id: 'a3', title: 'What is standalone architecture?', content: 'Angular 17+ makes standalone the default. Components declare their own imports array, eliminating the need for NgModules.' },
-  ];
+  protected readonly accordionItems = computed(() => [
+    { id: 'a1', title: this.ts.translate('aria.accordion.q1'), content: this.ts.translate('aria.accordion.a1') },
+    { id: 'a2', title: this.ts.translate('aria.accordion.q2'), content: this.ts.translate('aria.accordion.a2') },
+    { id: 'a3', title: this.ts.translate('aria.accordion.q3'), content: this.ts.translate('aria.accordion.a3') },
+  ]);
 
-  protected readonly tabItems = [
-    { value: 'wcag', label: 'WCAG AA', content: 'WCAG AA requires a minimum contrast ratio of 4.5:1 for normal text and 3:1 for large text. Angular templates should use semantic HTML and provide sufficient color contrast.' },
-    { value: 'keyboard', label: 'Keyboard', content: 'All interactive elements must be keyboard accessible. Use tabindex, focus management, and ARIA roles to ensure users can navigate without a mouse.' },
-    { value: 'screen', label: 'Screen Readers', content: 'Angular applications should announce dynamic content changes with aria-live regions. Use aria-label, aria-labelledby, and aria-describedby to provide context.' },
-  ];
+  protected readonly tabItems = computed(() => [
+    { value: 'wcag', label: this.ts.translate('aria.tabs.wcag'), content: this.ts.translate('aria.tabs.wcagContent') },
+    { value: 'keyboard', label: this.ts.translate('aria.tabs.keyboard'), content: this.ts.translate('aria.tabs.keyboardContent') },
+    { value: 'screen', label: this.ts.translate('aria.tabs.screen'), content: this.ts.translate('aria.tabs.screenContent') },
+  ]);
 
   protected announce(type: 'polite' | 'assertive', msg: string): void {
     if (type === 'polite') {
@@ -257,14 +262,14 @@ export class AriaAccessibility {
     }
   }
 
-  protected readonly wcagItems = [
-    { label: 'Contrast 4.5:1', desc: 'Normal text min ratio' },
-    { label: 'Keyboard nav', desc: 'All controls reachable' },
-    { label: 'Focus visible', desc: 'Always visible focus ring' },
-    { label: 'Semantic HTML', desc: 'Use elements as intended' },
-    { label: 'ARIA roles', desc: 'Only when native fails' },
-    { label: 'Live regions', desc: 'Announce dynamic content' },
-  ];
+  protected readonly wcagItems = computed(() => [
+    { key: 'contrast', label: this.ts.translate('aria.wcag.contrast.label'), desc: this.ts.translate('aria.wcag.contrast.desc') },
+    { key: 'keyboard', label: this.ts.translate('aria.wcag.keyboard.label'), desc: this.ts.translate('aria.wcag.keyboard.desc') },
+    { key: 'focus', label: this.ts.translate('aria.wcag.focus.label'), desc: this.ts.translate('aria.wcag.focus.desc') },
+    { key: 'semantic', label: this.ts.translate('aria.wcag.semantic.label'), desc: this.ts.translate('aria.wcag.semantic.desc') },
+    { key: 'roles', label: this.ts.translate('aria.wcag.roles.label'), desc: this.ts.translate('aria.wcag.roles.desc') },
+    { key: 'live', label: this.ts.translate('aria.wcag.live.label'), desc: this.ts.translate('aria.wcag.live.desc') },
+  ]);
 
   protected readonly snippets = {
     accordion: `<div ngAccordionGroup>

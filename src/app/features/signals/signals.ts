@@ -1,4 +1,7 @@
-﻿import { Component, computed, debounced, effect, linkedSignal, signal } from '@angular/core';
+﻿import { Component, computed, debounced, effect, inject, linkedSignal, signal } from '@angular/core';
+
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translation.pipe';
 
 type Category = 'fruits' | 'vegetables' | 'grains';
 
@@ -12,7 +15,7 @@ const CATEGORIES: Category[] = ['fruits', 'vegetables', 'grains'];
 
 @Component({
   selector: 'app-signals',
-  imports: [],
+  imports: [TranslatePipe],
   template: `
     <div class="w-full space-y-6">
 
@@ -28,7 +31,7 @@ const CATEGORIES: Category[] = ['fruits', 'vegetables', 'grains'];
       <section class="overflow-hidden rounded-xl border border-neutral-800 bg-surface-800" aria-labelledby="s-signal">
         <header class="flex items-center gap-3 border-b border-neutral-800 px-5 py-3.5">
           <h2 id="s-signal" class="font-mono text-sm font-semibold text-neutral-100">signal()</h2>
-          <span class="rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">STABLE</span>
+          <span class="rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
           <span class="ml-auto hidden text-xs text-neutral-500 sm:block">Writable reactive value</span>
         </header>
         <div class="grid lg:grid-cols-2">
@@ -74,7 +77,7 @@ const CATEGORIES: Category[] = ['fruits', 'vegetables', 'grains'];
       <section class="overflow-hidden rounded-xl border border-neutral-800 bg-surface-800" aria-labelledby="s-computed">
         <header class="flex items-center gap-3 border-b border-neutral-800 px-5 py-3.5">
           <h2 id="s-computed" class="font-mono text-sm font-semibold text-neutral-100">computed()</h2>
-          <span class="rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">STABLE</span>
+          <span class="rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
           <span class="ml-auto hidden text-xs text-neutral-500 sm:block">Read-only derived state — lazy &amp; memoized</span>
         </header>
         <div class="grid lg:grid-cols-2">
@@ -113,7 +116,7 @@ const CATEGORIES: Category[] = ['fruits', 'vegetables', 'grains'];
       <section class="overflow-hidden rounded-xl border border-neutral-800 bg-surface-800" aria-labelledby="s-effect">
         <header class="flex items-center gap-3 border-b border-neutral-800 px-5 py-3.5">
           <h2 id="s-effect" class="font-mono text-sm font-semibold text-neutral-100">effect()</h2>
-          <span class="rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">STABLE</span>
+          <span class="rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
           <span class="ml-auto hidden text-xs text-neutral-500 sm:block">Side effects — runs when dependencies change</span>
         </header>
         <div class="grid lg:grid-cols-2">
@@ -144,7 +147,7 @@ const CATEGORIES: Category[] = ['fruits', 'vegetables', 'grains'];
       <section class="overflow-hidden rounded-xl border border-neutral-800 bg-surface-800" aria-labelledby="s-linked">
         <header class="flex items-center gap-3 border-b border-neutral-800 px-5 py-3.5">
           <h2 id="s-linked" class="font-mono text-sm font-semibold text-neutral-100">linkedSignal()</h2>
-          <span class="rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">STABLE</span>
+          <span class="rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
           <span class="ml-auto hidden text-xs text-neutral-500 sm:block">Writable derived signal — auto-resets with source</span>
         </header>
         <div class="grid lg:grid-cols-2">
@@ -196,7 +199,7 @@ const CATEGORIES: Category[] = ['fruits', 'vegetables', 'grains'];
       <section class="overflow-hidden rounded-xl border border-neutral-800 bg-surface-800" aria-labelledby="s-debounced">
         <header class="flex items-center gap-3 border-b border-neutral-800 px-5 py-3.5">
           <h2 id="s-debounced" class="font-mono text-sm font-semibold text-neutral-100">debounced()</h2>
-          <span class="rounded border border-amber-500/20 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-400">EXPERIMENTAL</span>
+          <span class="rounded border border-amber-500/20 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-400">{{ 'badge.experimental' | translate : ts.currentLanguage() }}</span>
           <span class="ml-auto hidden text-xs text-neutral-500 sm:block">Delays signal propagation — Resource-based</span>
         </header>
         <div class="grid lg:grid-cols-2">
@@ -252,6 +255,8 @@ const CATEGORIES: Category[] = ['fruits', 'vegetables', 'grains'];
   `,
 })
 export class Signals {
+  protected readonly ts = inject(TranslationService);
+
   // ── signal() ──────────────────────────────────────────────
   protected readonly count = signal(0);
   protected readonly history = signal<number[]>([0]);

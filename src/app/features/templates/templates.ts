@@ -1,4 +1,7 @@
-﻿import { Component, computed, signal } from '@angular/core';
+﻿import { Component, computed, inject, signal } from '@angular/core';
+
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translation.pipe';
 
 type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
@@ -18,14 +21,15 @@ const ITEMS: Item[] = [
 
 @Component({
   selector: 'app-templates',
+  imports: [TranslatePipe],
   template: `
     <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>
         <div class="flex items-center gap-3 mb-1">
-          <h1 class="text-2xl font-bold text-neutral-100">Template Syntax</h1>
-          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">Stable</span>
+          <h1 class="text-2xl font-bold text-neutral-100">{{ 'nav.templates' | translate : ts.currentLanguage() }}</h1>
+          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
         </div>
         <p class="text-neutral-400 text-sm">
           Native control flow, <code class="text-angular-red">&#64;defer</code>,
@@ -49,7 +53,7 @@ const ITEMS: Item[] = [
           <div class="p-5 space-y-4">
             <!-- Demo -->
             <div class="space-y-2">
-              <label class="text-xs text-neutral-500">Score:</label>
+              <label class="text-xs text-neutral-500">{{ 'templates.score' | translate : ts.currentLanguage() }}</label>
               <input
                 type="range"
                 min="0"
@@ -58,18 +62,18 @@ const ITEMS: Item[] = [
                 (input)="score.set(+$any($event.target).value)"
                 class="w-full accent-angular-red"
               />
-              <p class="text-xs text-neutral-500">value: <strong class="text-neutral-200">{{ score() }}</strong></p>
+              <p class="text-xs text-neutral-500">{{ 'templates.value' | translate : ts.currentLanguage() }} <strong class="text-neutral-200">{{ score() }}</strong></p>
               <div class="rounded-lg px-4 py-2.5 text-sm font-semibold text-center"
                 [class]="scoreBadgeClass()"
               >
                 @if (score() >= 90) {
-                  Excellent — {{ score() }}
+                  {{ 'templates.excellent' | translate : ts.currentLanguage() }} — {{ score() }}
                 } @else if (score() >= 70) {
-                  Good — {{ score() }}
+                  {{ 'templates.good' | translate : ts.currentLanguage() }} — {{ score() }}
                 } @else if (score() >= 50) {
-                  Average — {{ score() }}
+                  {{ 'templates.average' | translate : ts.currentLanguage() }} — {{ score() }}
                 } @else {
-                  Needs work — {{ score() }}
+                  {{ 'templates.needsWork' | translate : ts.currentLanguage() }} — {{ score() }}
                 }
               </div>
             </div>
@@ -91,7 +95,7 @@ const ITEMS: Item[] = [
               <button
                 (click)="toggleAll()"
                 class="rounded border border-neutral-700 px-3 py-1 text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
-              >{{ filtered().length === 0 ? 'Show All' : 'Hide All' }}</button>
+              >{{ (filtered().length === 0 ? 'templates.showAll' : 'templates.hideAll') | translate : ts.currentLanguage() }}</button>
               <button
                 (click)="filterCat.set(filterCat() === 'framework' ? '' : 'framework')"
                 class="rounded px-3 py-1 text-xs transition-colors"
@@ -100,7 +104,7 @@ const ITEMS: Item[] = [
                 [class.border]="filterCat() !== 'framework'"
                 [class.border-neutral-700]="filterCat() !== 'framework'"
                 [class.text-neutral-400]="filterCat() !== 'framework'"
-              >frameworks only</button>
+              >{{ 'templates.frameworksOnly' | translate : ts.currentLanguage() }}</button>
             </div>
             <!-- List -->
             <div class="space-y-1.5">
@@ -148,23 +152,23 @@ const ITEMS: Item[] = [
 
             @switch (season()) {
               @case ('spring') {
-                <div class="rounded-xl bg-green-900/10 border border-green-800/30 p-4 text-sm text-green-300">
-                  🌸 Spring — new growth, renewal, components bootstrapping
+                <div class="rounded-xl bg-green-900/10 border border-green-800/30 p-4 text-sm text-green-600">
+                  {{ 'templates.seasons.spring' | translate : ts.currentLanguage() }}
                 </div>
               }
               @case ('summer') {
-                <div class="rounded-xl bg-yellow-900/10 border border-yellow-800/30 p-4 text-sm text-yellow-300">
-                  ☀️ Summer — peak performance, change detection in full swing
+                <div class="rounded-xl bg-yellow-900/10 border border-yellow-800/30 p-4 text-sm text-yellow-600">
+                  {{ 'templates.seasons.summer' | translate : ts.currentLanguage() }}
                 </div>
               }
               @case ('autumn') {
-                <div class="rounded-xl bg-orange-900/10 border border-orange-800/30 p-4 text-sm text-orange-300">
-                  🍂 Autumn — lifecycle hooks running, cleanup time
+                <div class="rounded-xl bg-orange-900/10 border border-orange-800/30 p-4 text-sm text-orange-600">
+                  {{ 'templates.seasons.autumn' | translate : ts.currentLanguage() }}
                 </div>
               }
               @default {
-                <div class="rounded-xl bg-blue-900/10 border border-blue-800/30 p-4 text-sm text-blue-300">
-                  ❄️ Winter — idle state, waiting for next render cycle
+                <div class="rounded-xl bg-blue-900/10 border border-blue-800/30 p-4 text-sm text-blue-600">
+                  {{ 'templates.seasons.winter' | translate : ts.currentLanguage() }}
                 </div>
               }
             }
@@ -181,10 +185,7 @@ const ITEMS: Item[] = [
             </h2>
           </div>
           <div class="p-5 space-y-4">
-            <p class="text-xs text-neutral-500">
-              <code class="text-angular-red">&#64;let</code> declares block-scoped template variables.
-              Useful for aliasing expensive computations or piped values.
-            </p>
+            <p class="text-xs text-neutral-500">{{ 'templates.letDesc' | translate : ts.currentLanguage() }}</p>
             <!-- Demo: compute inside template -->
             @let doubled = score() * 2;
             @let label = score() >= 50 ? 'Pass' : 'Fail';
@@ -219,22 +220,21 @@ const ITEMS: Item[] = [
             <!-- Demo -->
             <div class="space-y-4">
               <p class="text-xs text-neutral-500">
-                <code class="text-angular-red">&#64;defer</code> lazily loads a block of template on a trigger condition.
-                Reduces initial bundle size.
+                {{ 'templates.deferDesc' | translate : ts.currentLanguage() }}
               </p>
               <div class="space-y-2">
                 <button
                   (click)="showDeferred.set(!showDeferred())"
                   class="rounded-lg bg-angular-red px-4 py-2 text-sm font-medium text-white hover:bg-angular-dark-red transition-colors"
                 >
-                  {{ showDeferred() ? 'Hide' : 'Load' }} deferred block
+                  {{ (showDeferred() ? 'templates.hide' : 'templates.load') | translate : ts.currentLanguage() }} deferred block
                 </button>
               </div>
 
               @defer (when showDeferred()) {
                 <div class="rounded-xl border border-angular-red/20 bg-angular-red/5 p-4 text-sm text-angular-red/90 space-y-1">
-                  <p class="font-semibold">Deferred block loaded!</p>
-                  <p class="text-xs text-neutral-400">This block was lazily rendered when the trigger fired.</p>
+                  <p class="font-semibold">{{ 'templates.deferredLoaded' | translate : ts.currentLanguage() }}</p>
+                  <p class="text-xs text-neutral-400">{{ 'templates.deferredDesc' | translate : ts.currentLanguage() }}</p>
                   <p class="text-xs font-mono text-neutral-500 mt-2">timestamp: {{ loadTime() }}</p>
                 </div>
               } @placeholder {
@@ -265,6 +265,8 @@ const ITEMS: Item[] = [
   `,
 })
 export class Templates {
+  protected readonly ts = inject(TranslationService);
+
   protected readonly score = signal(72);
   protected readonly filterCat = signal('');
   protected readonly showItems = signal(true);

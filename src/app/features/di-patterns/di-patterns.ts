@@ -8,6 +8,9 @@
   signal,
 } from '@angular/core';
 
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translation.pipe';
+
 // ─── Token example ────────────────────────────────────────────────────────────
 interface AppConfig {
   version: string;
@@ -49,14 +52,15 @@ class LogService {
 
 @Component({
   selector: 'app-di-patterns',
+  imports: [TranslatePipe],
   template: `
     <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>
         <div class="flex items-center gap-3 mb-1">
-          <h1 class="text-2xl font-bold text-neutral-100">Dependency Injection</h1>
-          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">Stable</span>
+          <h1 class="text-2xl font-bold text-neutral-100">{{ 'nav.di' | translate : ts.currentLanguage() }}</h1>
+          <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-angular-red/15 text-angular-red border border-angular-red/25">{{ 'badge.stable' | translate : ts.currentLanguage() }}</span>
         </div>
         <p class="text-neutral-400 text-sm">
           <code class="text-angular-red">inject()</code> ·
@@ -75,7 +79,7 @@ class LogService {
           </div>
           <div class="p-5 space-y-4">
             <p class="text-xs text-neutral-500">
-              <code class="text-angular-red">inject()</code> replaces constructor injection. Works in any injection context — component, service, guard, factory.
+              <code class="text-angular-red">inject()</code> {{ 'di.injectDesc' | translate : ts.currentLanguage() }}
             </p>
             <div class="rounded-lg border border-neutral-800 bg-surface-800 p-4 space-y-3 text-xs">
               <div class="flex items-center justify-between">
@@ -87,7 +91,7 @@ class LogService {
               <button
                 (click)="themeService.toggle(); logger.log('ThemeService.toggle() called')"
                 class="w-full rounded-lg border border-neutral-700 py-2 text-xs text-neutral-400 hover:text-neutral-200 hover:border-neutral-500 transition-colors"
-              >Toggle theme</button>
+              >{{ 'di.toggleTheme' | translate : ts.currentLanguage() }}</button>
             </div>
             <pre class="rounded-lg bg-surface-800 p-3 text-xs font-mono text-neutral-300 leading-relaxed overflow-x-auto">{{ snippets.inject }}</pre>
           </div>
@@ -103,24 +107,22 @@ class LogService {
           </div>
           <div class="p-5 space-y-4">
             <p class="text-xs text-neutral-500">
-              <code class="text-angular-red">&#64;Service()</code> is a stable Angular 22 shorthand for
-              <code class="text-neutral-300">&#64;Injectable(&#123; providedIn: 'root' &#125;)</code>.
-              Services use <code class="text-angular-red">inject()</code> for their own dependencies.
+              <code class="text-angular-red">&#64;Service()</code> {{ 'di.serviceDesc' | translate : ts.currentLanguage() }}
             </p>
             <div class="rounded-lg border border-neutral-800 bg-surface-800 divide-y divide-neutral-800">
               <div class="px-4 py-2.5 flex items-center gap-3 text-xs">
                 <span class="h-2 w-2 rounded-full bg-green-400 shrink-0"></span>
-                <span class="text-neutral-400 flex-1">Singleton (providedIn: 'root')</span>
+                <span class="text-neutral-400 flex-1">{{ 'di.singleton' | translate : ts.currentLanguage() }}</span>
                 <span class="font-mono text-neutral-300">ThemeService</span>
               </div>
               <div class="px-4 py-2.5 flex items-center gap-3 text-xs">
                 <span class="h-2 w-2 rounded-full bg-green-400 shrink-0"></span>
-                <span class="text-neutral-400 flex-1">Uses inject() internally</span>
+                <span class="text-neutral-400 flex-1">{{ 'di.usesInject' | translate : ts.currentLanguage() }}</span>
                 <span class="font-mono text-neutral-300">LogService</span>
               </div>
               <div class="px-4 py-2.5 flex items-center gap-3 text-xs">
                 <span class="h-2 w-2 rounded-full bg-blue-400 shrink-0"></span>
-                <span class="text-neutral-400 flex-1">Signal-based state</span>
+                <span class="text-neutral-400 flex-1">{{ 'di.signalState' | translate : ts.currentLanguage() }}</span>
                 <span class="font-mono text-neutral-300">signal() + .asReadonly()</span>
               </div>
             </div>
@@ -135,11 +137,11 @@ class LogService {
           </div>
           <div class="p-5 space-y-4">
             <p class="text-xs text-neutral-500">
-              <code class="text-angular-red">InjectionToken</code> provides type-safe DI for non-class values: configs, feature flags, environment values.
+              <code class="text-angular-red">InjectionToken</code> {{ 'di.tokenDesc' | translate : ts.currentLanguage() }}
             </p>
             <!-- Live demo: show injected config -->
             <div class="rounded-lg border border-neutral-800 bg-surface-800 p-4 space-y-2">
-              <p class="text-xs text-neutral-600 uppercase tracking-wider mb-3">Injected APP_CONFIG value:</p>
+              <p class="text-xs text-neutral-600 uppercase tracking-wider mb-3">{{ 'di.injectedConfig' | translate : ts.currentLanguage() }}</p>
               <div class="space-y-1.5 text-xs font-mono">
                 @for (entry of configEntries(); track entry.key) {
                   <div class="flex items-center gap-3">
@@ -168,15 +170,15 @@ class LogService {
               <button
                 (click)="logger.log('inject() called from component')"
                 class="rounded border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
-              >Log from component</button>
+              >{{ 'di.logFromComponent' | translate : ts.currentLanguage() }}</button>
               <button
                 (click)="logFromService()"
                 class="rounded border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
-              >Log from service</button>
+              >{{ 'di.logFromService' | translate : ts.currentLanguage() }}</button>
             </div>
             <div class="h-36 overflow-y-auto rounded-lg border border-neutral-800 bg-surface-800 p-3">
               @if (logger.entries().length === 0) {
-                <p class="text-xs text-neutral-600">Click a button to log an entry…</p>
+                <p class="text-xs text-neutral-600">{{ 'di.logEmptyState' | translate : ts.currentLanguage() }}</p>
               }
               @for (entry of logger.entries(); track $index) {
                 <p class="text-[11px] font-mono text-green-400">{{ entry }}</p>
@@ -190,9 +192,9 @@ class LogService {
 
       <!-- DI hierarchy callout -->
       <div class="rounded-xl border border-neutral-800 bg-surface-900 p-5 space-y-3">
-        <h3 class="text-sm font-semibold text-neutral-200">Angular DI Hierarchy</h3>
+        <h3 class="text-sm font-semibold text-neutral-200">{{ 'di.hierarchy' | translate : ts.currentLanguage() }}</h3>
         <div class="flex flex-col sm:flex-row gap-3 text-xs">
-          @for (level of diLevels; track level.name) {
+          @for (level of diLevels(); track level.name) {
             <div class="flex-1 rounded-lg border border-neutral-800 bg-surface-800/50 p-3 space-y-1">
               <div class="flex items-center gap-2">
                 <div class="h-2 w-2 rounded-full" [style.background]="level.color"></div>
@@ -209,6 +211,7 @@ class LogService {
   `,
 })
 export class DiPatterns implements OnInit {
+  protected readonly ts = inject(TranslationService);
   protected readonly themeService = inject(ThemeService);
   protected readonly logger = inject(LogService);
   private readonly config = inject(APP_CONFIG);
@@ -226,32 +229,32 @@ export class DiPatterns implements OnInit {
     this.logger.log(`ThemeService injected in LogService call — theme: ${this.themeService.theme()}`);
   }
 
-  protected readonly diLevels = [
+  protected readonly diLevels = computed(() => [
     {
       name: 'Root',
       color: '#ef4444',
-      desc: 'Application-wide singleton. Shared by all components.',
+      desc: this.ts.translate('di.levels.root'),
       provider: "providedIn: 'root'",
     },
     {
       name: 'Platform',
       color: '#f59e0b',
-      desc: 'Shared across multiple Angular apps on the same page.',
+      desc: this.ts.translate('di.levels.platform'),
       provider: "providedIn: 'platform'",
     },
     {
       name: 'Component',
       color: '#22c55e',
-      desc: 'New instance per component. Destroyed with the component.',
+      desc: this.ts.translate('di.levels.component'),
       provider: 'providers: [MyService]',
     },
     {
       name: 'Element',
       color: '#a78bfa',
-      desc: 'Provided via viewProviders for content projection isolation.',
+      desc: this.ts.translate('di.levels.element'),
       provider: 'viewProviders: [...]',
     },
-  ];
+  ]);
 
   protected readonly snippets = {
     inject: `// Component or service — no constructor needed

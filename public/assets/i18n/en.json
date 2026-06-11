@@ -108,6 +108,160 @@
     "sections": "Sections",
     "builtWith": "Built with Angular 22"
   },
+  "forms": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "emailPlaceholder": "user@example.com",
+    "passwordPlaceholder": "Min. 8 characters",
+    "repeatPasswordPlaceholder": "Repeat password",
+    "register": "Register",
+    "registering": "Registering…",
+    "saveSkills": "Save skills",
+    "addSkill": "+ Add skill",
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Minimum 8 characters",
+      "noRepeat": "Avoid repeated characters",
+      "passwordMismatch": "Passwords do not match"
+    }
+  },
+  "signalForms": {
+    "registrationForm": "Registration Form",
+    "username": "Username",
+    "usernamePlaceholder": "e.g. john_doe",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "Min 8 chars",
+    "checkingAvailability": "Checking availability…",
+    "registrationSuccess": "Registration successful!",
+    "welcome": "Welcome,",
+    "liveFormState": "Live Form State",
+    "perFieldState": "Per-field State"
+  },
+  "reactiveForms": {
+    "subtitle": "FormGroup · FormControl · FormArray · Validators · Cross-field validation · Dynamic fields",
+    "formArrayDesc": "Add or remove skill entries at runtime using FormArray.",
+    "typeToSearch": "Type to search…",
+    "builtInValidators": "Built-in Validators",
+    "registered": "Registered:",
+    "saved": "Saved:",
+    "validators": {
+      "required": "Control value must be non-empty.",
+      "email": "Value must match an email pattern.",
+      "minLength": "Value length must be ≥ n.",
+      "maxLength": "Value length must be ≤ n.",
+      "min": "Numeric value must be ≥ n.",
+      "max": "Numeric value must be ≤ n.",
+      "pattern": "Value must match the RegExp r.",
+      "nullValidator": "Always returns null (valid).",
+      "compose": "Combine multiple sync validators.",
+      "composeAsync": "Combine multiple async validators."
+    }
+  },
+  "templates": {
+    "score": "Score:",
+    "value": "value:",
+    "excellent": "Excellent",
+    "good": "Good",
+    "average": "Average",
+    "needsWork": "Needs work",
+    "showAll": "Show All",
+    "hideAll": "Hide All",
+    "frameworksOnly": "frameworks only",
+    "load": "Load",
+    "hide": "Hide",
+    "deferredLoaded": "Deferred block loaded!",
+    "deferredDesc": "This block was lazily rendered when the trigger fired.",
+    "letDesc": "@let declares block-scoped template variables. Useful for aliasing expensive computations or piped values.",
+    "deferDesc": "@defer lazily loads a block of template on a trigger condition. Reduces initial bundle size.",
+    "seasons": {
+      "spring": "🌸 Spring — new growth, renewal, components bootstrapping",
+      "summer": "☀️ Summer — peak performance, change detection in full swing",
+      "autumn": "🍂 Autumn — lifecycle hooks running, cleanup time",
+      "winter": "❄️ Winter — idle state, waiting for next render cycle"
+    }
+  },
+  "router": {
+    "currentRouteState": "Current Route State",
+    "urlLabel": "URL",
+    "routePath": "Route path",
+    "titleLabel": "Title",
+    "routerLinkDesc": "Declarative navigation with active state detection.",
+    "tryNavigating": "Try navigating to",
+    "guardsDesc": "Functional guards with inject(). No class required.",
+    "simulateLoggedIn": "Simulate logged in",
+    "navigateProtected": "Navigate to protected route",
+    "navigateEvents": "Navigate between routes to see events…",
+    "guardPassed": "✓ Guard passed — navigation allowed.",
+    "guardBlocked": "✗ Guard blocked — redirected to login.",
+    "lazyLoadingTitle": "Lazy loading",
+    "lazyLoadingPart1": "— every feature route in this app uses",
+    "lazyLoadingPart2": "in",
+    "lazyLoadingPart3": ". Each chunk loads on demand. You can verify this in the Network tab — chunks are fetched only when the route is first visited.",
+    "routeParamsDesc": "With withComponentInputBinding() in provideRouter(), route params map directly to input() signals.",
+    "eventsTitle": "Router Events",
+    "eventsDesc": "router.events is an Observable — use toSignal() to bridge to signals."
+  },
+  "di": {
+    "injectDesc": "replaces constructor injection. Works in any injection context — component, service, guard, factory.",
+    "toggleTheme": "Toggle theme",
+    "serviceDesc": "is a stable Angular 22 shorthand for @Injectable({ providedIn: 'root' }). Services use inject() for their own dependencies.",
+    "singleton": "Singleton (providedIn: 'root')",
+    "usesInject": "Uses inject() internally",
+    "signalState": "Signal-based state",
+    "tokenDesc": "provides type-safe DI for non-class values: configs, feature flags, environment values.",
+    "injectedConfig": "Injected APP_CONFIG value:",
+    "logFromComponent": "Log from component",
+    "logFromService": "Log from service",
+    "logEmptyState": "Click a button to log an entry…",
+    "hierarchy": "Angular DI Hierarchy",
+    "levels": {
+      "root": "Application-wide singleton. Shared by all components.",
+      "platform": "Shared across multiple Angular apps on the same page.",
+      "component": "New instance per component. Destroyed with the component.",
+      "element": "Provided via viewProviders for content projection isolation."
+    }
+  },
+  "aria": {
+    "subtitle": "Official Angular ARIA patterns — Accordion · Tabs · Listbox · Live regions",
+    "wcagTitle": "WCAG AA Checklist",
+    "wcag": {
+      "contrast": { "label": "Contrast 4.5:1", "desc": "Normal text min ratio" },
+      "keyboard": { "label": "Keyboard nav", "desc": "All controls reachable" },
+      "focus": { "label": "Focus visible", "desc": "Always visible focus ring" },
+      "semantic": { "label": "Semantic HTML", "desc": "Use elements as intended" },
+      "roles": { "label": "ARIA roles", "desc": "Only when native fails" },
+      "live": { "label": "Live regions", "desc": "Announce dynamic content" }
+    },
+    "accordion": {
+      "q1": "What are Angular signals?",
+      "a1": "Signals are reactive primitives that Angular uses to track dependencies and update the DOM efficiently. They replace zone.js for change detection.",
+      "q2": "When to use computed() vs effect()?",
+      "a2": "Use computed() to derive values from signals — it memoizes and re-runs only when its dependencies change. Use effect() only for side effects like logging, DOM manipulation, or analytics.",
+      "q3": "What is standalone architecture?",
+      "a3": "Angular 17+ makes standalone the default. Components declare their own imports array, eliminating the need for NgModules."
+    },
+    "tabs": {
+      "wcag": "WCAG AA",
+      "keyboard": "Keyboard",
+      "screen": "Screen Readers",
+      "wcagContent": "WCAG AA requires a minimum contrast ratio of 4.5:1 for normal text and 3:1 for large text. Angular templates should use semantic HTML and provide sufficient color contrast.",
+      "keyboardContent": "All interactive elements must be keyboard accessible. Use tabindex, focus management, and ARIA roles to ensure users can navigate without a mouse.",
+      "screenContent": "Angular applications should announce dynamic content changes with aria-live regions. Use aria-label, aria-labelledby, and aria-describedby to provide context."
+    },
+    "selected": "Selected:",
+    "liveTitle": "Live Region",
+    "liveSubtitle": "aria-live · aria-atomic · status announcements",
+    "liveDesc": "aria-live announces dynamic content to screen readers. Use polite for non-critical updates, assertive for errors.",
+    "announceSuccess": "Announce success (polite)",
+    "announceSuccessMsg": "Data saved successfully!",
+    "announceError": "Announce error (assertive)",
+    "announceErrorMsg": "Error: connection failed!",
+    "politeSilent": "polite region — silent",
+    "assertiveSilent": "assertive region — silent"
+  },
   "sections": {
     "dataExplorer": {
       "title": "Data Explorer",
