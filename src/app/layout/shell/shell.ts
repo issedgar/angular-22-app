@@ -4,10 +4,11 @@ import { RouterOutlet } from '@angular/router';
 import { LayoutService } from '../../core/services/layout.service';
 import { Sidebar } from '../sidebar/sidebar';
 import { Navbar } from '../navbar/navbar';
+import { ScrollToTop } from '../../shared/scroll-to-top/scroll-to-top';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, Sidebar, Navbar],
+  imports: [RouterOutlet, Sidebar, Navbar, ScrollToTop],
   template: `
     <a
       href="#main-content"
@@ -31,6 +32,7 @@ import { Navbar } from '../navbar/navbar';
           <div class="w-full px-4 sm:px-6 lg:px-8 py-6">
             <router-outlet />
           </div>
+          <app-scroll-to-top />
         </main>
       </div>
     </div>
