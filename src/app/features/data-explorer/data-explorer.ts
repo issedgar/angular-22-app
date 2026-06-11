@@ -341,6 +341,53 @@ function storePageSize(size: PageSize): void {
         } @else {
           <!-- Pokemon list table -->
           <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top paginator -->
+            <div class="shrink-0 border-b border-neutral-800 bg-surface-800 px-4 py-3">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <p class="text-xs text-neutral-500 hidden sm:block">
+                  {{ 'paginator.showing' | translate : ts.currentLanguage() }}
+                  <span class="text-neutral-300 font-medium">{{ showingFrom() }}</span>
+                  {{ 'paginator.to' | translate : ts.currentLanguage() }}
+                  <span class="text-neutral-300 font-medium">{{ showingTo() }}</span>
+                  {{ 'paginator.of' | translate : ts.currentLanguage() }}
+                  <span class="text-neutral-300 font-medium">{{ totalCount() }}</span>
+                </p>
+
+                <div class="flex w-full items-center justify-between gap-3 sm:ml-auto sm:w-auto sm:justify-end">
+                  <span class="text-xs text-neutral-400">
+                    {{ 'paginator.page' | translate : ts.currentLanguage() }}
+                    <span class="font-medium text-neutral-200 mx-1">{{ currentPage() }}</span>
+                    {{ 'paginator.of' | translate : ts.currentLanguage() }}
+                    <span class="font-medium text-neutral-200 ml-1">{{ totalPages() }}</span>
+                  </span>
+                  <div class="flex items-center gap-1">
+                    <button
+                      (click)="prevPage()"
+                      [disabled]="currentPage() <= 1"
+                      type="button"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-700 enabled:hover:text-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red"
+                    >
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span class="hidden sm:inline">{{ 'paginator.prev' | translate : ts.currentLanguage() }}</span>
+                    </button>
+                    <button
+                      (click)="nextPage()"
+                      [disabled]="currentPage() >= totalPages()"
+                      type="button"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-700 enabled:hover:text-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red"
+                    >
+                      <span class="hidden sm:inline">{{ 'paginator.next' | translate : ts.currentLanguage() }}</span>
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Sticky table header — desktop -->
             <div class="shrink-0 hidden lg:grid lg:grid-cols-[3.5rem_4.5rem_12rem_minmax(0,1fr)_6.5rem_6.5rem_3.5rem] items-center gap-3 border-b border-neutral-800 px-4 py-2.5 bg-surface-800">
               <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
