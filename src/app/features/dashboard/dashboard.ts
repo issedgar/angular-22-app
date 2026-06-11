@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+﻿import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { TranslationService } from '../../core/i18n/translation.service';
@@ -121,7 +121,7 @@ const STATS: Stat[] = [
   selector: 'app-dashboard',
   imports: [RouterLink, TranslatePipe],
   template: `
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
 
       <!-- ── Hero ────────────────────────────────────────────── -->
       <section

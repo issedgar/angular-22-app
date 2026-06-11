@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+﻿import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { httpResource } from '@angular/common/http';
 
@@ -11,7 +11,7 @@ import { Pokemon } from '../../../core/models/pokemon.model';
   selector: 'app-pokemon-detail',
   imports: [RouterLink, TranslatePipe],
   template: `
-    <div class="max-w-5xl mx-auto space-y-6">
+    <div class="w-full space-y-6">
 
       <!-- Back link -->
       <a

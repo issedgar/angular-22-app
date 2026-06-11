@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component,
   InjectionToken,
   Injectable,
@@ -50,7 +50,7 @@ class LogService {
 @Component({
   selector: 'app-di-patterns',
   template: `
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>

@@ -1,4 +1,4 @@
-import { Component, computed, debounced, effect, linkedSignal, signal } from '@angular/core';
+﻿import { Component, computed, debounced, effect, linkedSignal, signal } from '@angular/core';
 
 type Category = 'fruits' | 'vegetables' | 'grains';
 
@@ -14,7 +14,7 @@ const CATEGORIES: Category[] = ['fruits', 'vegetables', 'grains'];
   selector: 'app-signals',
   imports: [],
   template: `
-    <div class="max-w-5xl mx-auto space-y-6">
+    <div class="w-full space-y-6">
 
       <!-- Page header -->
       <div>

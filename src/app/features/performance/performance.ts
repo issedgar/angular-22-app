@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Pipe, PipeTransform, computed, effect, input, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, Pipe, PipeTransform, computed, effect, input, signal } from '@angular/core';
 
 interface ListItem {
   id: number;
@@ -46,7 +46,7 @@ class OnPushChild {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [OnPushChild, FormatScorePipe],
   template: `
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>

@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+﻿import { Component, computed, signal } from '@angular/core';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline';
 type BadgeColor = 'red' | 'green' | 'blue' | 'amber' | 'purple' | 'neutral';
@@ -31,7 +31,7 @@ let _toastId = 0;
 @Component({
   selector: 'app-components-lab',
   template: `
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>

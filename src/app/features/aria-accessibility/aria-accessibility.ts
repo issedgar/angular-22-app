@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+﻿import { Component, signal } from '@angular/core';
 import {
   AccordionContent,
   AccordionGroup,
@@ -30,7 +30,7 @@ const LIST_OPTIONS: ListOption[] = [
     Listbox, Option,
   ],
   template: `
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>

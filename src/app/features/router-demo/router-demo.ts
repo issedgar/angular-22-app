@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+﻿import { Component, computed, inject, signal } from '@angular/core';
 import {
   ActivatedRoute,
   NavigationEnd,
@@ -13,7 +13,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
   selector: 'app-router-demo',
   imports: [RouterLink, RouterLinkActive],
   template: `
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>

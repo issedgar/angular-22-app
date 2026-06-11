@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component,
   computed,
   resource,
@@ -32,7 +32,7 @@ const FAKE_POSTS: Post[] = Array.from({ length: 6 }, (_, i) => ({
 @Component({
   selector: 'app-resources',
   template: `
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>

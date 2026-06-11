@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+﻿import { Component, computed, signal } from '@angular/core';
 
 type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
@@ -19,7 +19,7 @@ const ITEMS: Item[] = [
 @Component({
   selector: 'app-templates',
   template: `
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
 
       <!-- Header -->
       <div>

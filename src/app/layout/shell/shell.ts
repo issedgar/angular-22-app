@@ -22,8 +22,10 @@ import { Navbar } from '../navbar/navbar';
 
       <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
         <app-navbar />
-        <main class="flex-1 overflow-y-auto p-6">
-          <router-outlet />
+        <main class="flex-1 overflow-y-auto">
+          <div class="w-full px-4 sm:px-6 lg:px-8 py-6">
+            <router-outlet />
+          </div>
         </main>
       </div>
     </div>
