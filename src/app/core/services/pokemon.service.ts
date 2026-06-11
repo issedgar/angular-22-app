@@ -65,6 +65,10 @@ export class PokemonService {
     return Math.min(100, Math.round((baseStat / max) * 100));
   }
 
+  statMax(statName: string): number {
+    return MAX_STATS[statName] ?? 255;
+  }
+
   extractId(url: string): number {
     const match = /\/pokemon\/(\d+)\/$/.exec(url);
     return match ? +match[1] : 0;

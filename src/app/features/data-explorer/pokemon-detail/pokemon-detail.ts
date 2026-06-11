@@ -126,6 +126,11 @@ import { Pokemon } from '../../../core/models/pokemon.model';
                     </span>
                     <div class="h-2 overflow-hidden rounded-full bg-surface-600">
                       <div
+                        role="progressbar"
+                        [attr.aria-valuenow]="stat.base_stat"
+                        aria-valuemin="0"
+                        [attr.aria-valuemax]="svc.statMax(stat.stat.name)"
+                        [attr.aria-label]="svc.statLabel(stat.stat.name) + ': ' + stat.base_stat"
                         class="h-full rounded-full transition-all duration-700"
                         [style.width]="svc.statPercent(stat.base_stat, stat.stat.name) + '%'"
                         [style.background]="statBarColor(svc.statPercent(stat.base_stat, stat.stat.name))"

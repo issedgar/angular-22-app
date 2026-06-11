@@ -55,11 +55,13 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
 
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm min-w-0" aria-label="Breadcrumb">
-        <span class="text-neutral-500 hidden sm:inline">
-          {{ 'navbar.appName' | translate : ts.currentLanguage() }}
-        </span>
-        <span class="text-neutral-700 hidden sm:inline" aria-hidden="true">/</span>
-        <span class="text-neutral-100 font-medium truncate">{{ currentPageLabel() }}</span>
+        <ol class="flex items-center gap-2 list-none m-0 p-0">
+          <li class="text-neutral-500 hidden sm:inline">
+            {{ 'navbar.appName' | translate : ts.currentLanguage() }}
+          </li>
+          <li class="text-neutral-700 hidden sm:inline" aria-hidden="true">/</li>
+          <li class="text-neutral-100 font-medium truncate" aria-current="page">{{ currentPageLabel() }}</li>
+        </ol>
       </nav>
 
       <div class="flex-1"></div>

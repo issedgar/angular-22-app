@@ -9,6 +9,11 @@ import { Navbar } from '../navbar/navbar';
   selector: 'app-shell',
   imports: [RouterOutlet, Sidebar, Navbar],
   template: `
+    <a
+      href="#main-content"
+      class="skip-link"
+    >Skip to content</a>
+
     <div class="flex h-screen overflow-hidden bg-surface-900">
       @if (layout.mobileSidebarOpen()) {
         <div
@@ -22,7 +27,7 @@ import { Navbar } from '../navbar/navbar';
 
       <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
         <app-navbar />
-        <main class="flex-1 overflow-y-auto">
+        <main id="main-content" class="flex-1 overflow-y-auto">
           <div class="w-full px-4 sm:px-6 lg:px-8 py-6">
             <router-outlet />
           </div>
