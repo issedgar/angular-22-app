@@ -28,18 +28,19 @@ type PageSize = (typeof PAGE_SIZES)[number];
 
       <!-- Toolbar -->
       <div class="shrink-0 flex flex-wrap items-center gap-3">
-        <!-- Search -->
+        <!-- Search — type="text" evita el botón X nativo del browser -->
         <div class="relative flex-1 min-w-56">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
             <path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <input
-            type="search"
+            type="text"
             [value]="searchInput()"
             (input)="onSearchInput($any($event.target).value)"
             [placeholder]="'dataExplorer.searchPlaceholder' | translate : ts.currentLanguage()"
             class="w-full rounded-lg border border-neutral-700 bg-surface-800 py-2 pl-9 pr-9 text-sm text-neutral-100 placeholder-neutral-500 focus:border-angular-red/50 focus:outline-none focus:ring-1 focus:ring-angular-red/30 transition-colors"
             [attr.aria-label]="'common.search' | translate : ts.currentLanguage()"
+            autocomplete="off"
           />
           @if (debouncedSearch.isLoading()) {
             <div class="absolute right-3 top-1/2 -translate-y-1/2">
@@ -208,8 +209,8 @@ type PageSize = (typeof PAGE_SIZES)[number];
         } @else {
           <!-- Pokemon list table -->
           <div class="flex flex-col flex-1 overflow-hidden">
-            <!-- Sticky table header -->
-            <div class="shrink-0 hidden lg:grid lg:grid-cols-[3.5rem_4.5rem_10rem_1fr_5rem_5rem_auto] items-center gap-3 border-b border-neutral-800 px-4 py-2.5 bg-surface-800">
+            <!-- Sticky table header — desktop -->
+            <div class="shrink-0 hidden lg:grid lg:grid-cols-[3.5rem_4.5rem_12rem_minmax(0,1fr)_6.5rem_6.5rem_3.5rem] items-center gap-3 border-b border-neutral-800 px-4 py-2.5 bg-surface-800">
               <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
                 {{ 'dataExplorer.col.id' | translate : ts.currentLanguage() }}
               </span>
@@ -228,13 +229,13 @@ type PageSize = (typeof PAGE_SIZES)[number];
               <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600 text-right">
                 {{ 'dataExplorer.col.weight' | translate : ts.currentLanguage() }}
               </span>
-              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600 flex justify-end pr-1">
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600 flex justify-center">
                 {{ 'dataExplorer.col.action' | translate : ts.currentLanguage() }}
               </span>
             </div>
 
-            <!-- Tablet header -->
-            <div class="shrink-0 hidden md:grid md:lg:hidden md:grid-cols-[3.5rem_4.5rem_1fr_auto] items-center gap-3 border-b border-neutral-800 px-4 py-2.5 bg-surface-800">
+            <!-- Sticky table header — tablet -->
+            <div class="shrink-0 hidden md:grid lg:hidden md:grid-cols-[3.5rem_4.5rem_1fr_auto] items-center gap-3 border-b border-neutral-800 px-4 py-2.5 bg-surface-800">
               <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">#</span>
               <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
                 {{ 'dataExplorer.col.image' | translate : ts.currentLanguage() }}
@@ -269,20 +270,41 @@ type PageSize = (typeof PAGE_SIZES)[number];
                   </button>
                 </div>
               } @else {
-                @for (item of listResource.value()?.results ?? []; track item.name; let even = $even; let i = $index) {
+                @for (item of listResource.value()?.results ?? []; track item.name; let i = $index) {
                   @let detail = getDetail(item.name);
-                  <a
-                    [routerLink]="['/data-explorer', item.name]"
+                  <!-- Fila: click solo selecciona; el botón detalle navega -->
+                  <div
                     (click)="svc.setSelected(item.name)"
-                    class="de-row group stagger-item no-underline text-neutral-400 border-b border-neutral-800/50 last:border-0 focus:outline-none"
+                    class="de-row group stagger-item cursor-pointer text-neutral-400 border-b border-neutral-800/50 last:border-0 focus:outline-none"
                     [class.de-row--selected]="svc.selectedName() === item.name"
                     [style.animation-delay.ms]="i * 30"
                   >
                     <!-- Desktop row (lg+) -->
-                    <div class="hidden lg:grid lg:grid-cols-[3.5rem_4.5rem_10rem_1fr_5rem_5rem_auto] items-center gap-3 px-4 py-2.5">
-                      <span class="font-mono text-xs text-neutral-500">
-                        #{{ svc.extractId(item.url).toString().padStart(4, '0') }}
-                      </span>
+                    <div class="hidden lg:grid lg:grid-cols-[3.5rem_4.5rem_12rem_minmax(0,1fr)_6.5rem_6.5rem_3.5rem] items-center gap-3 px-4 py-2.5">
+                      <!-- ID + copy -->
+                      <div class="flex items-center gap-1 min-w-0">
+                        <span class="font-mono text-xs text-neutral-500 truncate">
+                          #{{ svc.extractId(item.url).toString().padStart(4, '0') }}
+                        </span>
+                        <button
+                          (click)="copy($event, svc.extractId(item.url).toString(), 'id-' + item.name)"
+                          type="button"
+                          class="shrink-0 opacity-0 group-hover:opacity-40 hover:!opacity-100 text-neutral-400 transition-opacity"
+                          title="Copiar ID"
+                        >
+                          @if (copiedKey() === 'id-' + item.name) {
+                            <svg class="h-3 w-3 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                              <path d="M4.5 12.75l6 6 9-13.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          } @else {
+                            <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          }
+                        </button>
+                      </div>
+                      <!-- Image -->
                       <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-surface-700/50">
                         <img
                           [src]="svc.artworkUrl(svc.extractId(item.url))"
@@ -291,7 +313,28 @@ type PageSize = (typeof PAGE_SIZES)[number];
                           loading="lazy"
                         />
                       </div>
-                      <span class="text-sm font-semibold text-neutral-200 truncate">{{ svc.capitalize(item.name) }}</span>
+                      <!-- Name + copy -->
+                      <div class="flex items-center gap-1 min-w-0">
+                        <span class="text-sm font-semibold text-neutral-200 truncate">{{ svc.capitalize(item.name) }}</span>
+                        <button
+                          (click)="copy($event, svc.capitalize(item.name), 'name-' + item.name)"
+                          type="button"
+                          class="shrink-0 opacity-0 group-hover:opacity-40 hover:!opacity-100 text-neutral-400 transition-opacity"
+                          title="Copiar nombre"
+                        >
+                          @if (copiedKey() === 'name-' + item.name) {
+                            <svg class="h-3 w-3 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                              <path d="M4.5 12.75l6 6 9-13.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          } @else {
+                            <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          }
+                        </button>
+                      </div>
+                      <!-- Types -->
                       <div class="flex flex-wrap gap-1">
                         @if (detail) {
                           @for (t of detail.types; track t.type.name) {
@@ -304,27 +347,35 @@ type PageSize = (typeof PAGE_SIZES)[number];
                           <div class="h-5 w-16 rounded bg-surface-600 animate-pulse"></div>
                         }
                       </div>
-                      <span class="text-xs text-neutral-400 text-right tabular-nums">
+                      <!-- Height -->
+                      <span class="text-xs text-neutral-400 text-right tabular-nums pr-2">
                         @if (detail) {
                           {{ (detail.height / 10).toFixed(1) }} m
                         } @else {
                           <span class="inline-block h-3 w-10 rounded bg-surface-600 animate-pulse"></span>
                         }
                       </span>
-                      <span class="text-xs text-neutral-400 text-right tabular-nums">
+                      <!-- Weight -->
+                      <span class="text-xs text-neutral-400 text-right tabular-nums pr-2">
                         @if (detail) {
                           {{ (detail.weight / 10).toFixed(1) }} kg
                         } @else {
                           <span class="inline-block h-3 w-10 rounded bg-surface-600 animate-pulse"></span>
                         }
                       </span>
-                      <div class="flex justify-end pr-1">
-                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 transition-colors" [attr.aria-label]="'dataExplorer.col.action' | translate : ts.currentLanguage()">
+                      <!-- Detail button — navega al detalle -->
+                      <div class="flex justify-center">
+                        <a
+                          [routerLink]="['/data-explorer', item.name]"
+                          (click)="openDetail($event, item.name)"
+                          class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 hover:border-angular-red/50 hover:text-angular-red hover:bg-angular-red/5 transition-colors no-underline"
+                          [attr.aria-label]="'dataExplorer.col.action' | translate : ts.currentLanguage()"
+                        >
                           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                             <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
-                        </span>
+                        </a>
                       </div>
                     </div>
 
@@ -355,12 +406,17 @@ type PageSize = (typeof PAGE_SIZES)[number];
                         }
                       </div>
                       <div class="flex justify-end pr-1">
-                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 transition-colors">
+                        <a
+                          [routerLink]="['/data-explorer', item.name]"
+                          (click)="openDetail($event, item.name)"
+                          class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 hover:border-angular-red/50 hover:text-angular-red transition-colors no-underline"
+                          [attr.aria-label]="'dataExplorer.col.action' | translate : ts.currentLanguage()"
+                        >
                           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                             <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
-                        </span>
+                        </a>
                       </div>
                     </div>
 
@@ -388,11 +444,18 @@ type PageSize = (typeof PAGE_SIZES)[number];
                           </div>
                         }
                       </div>
-                      <svg class="h-4 w-4 text-neutral-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                        <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
+                      <a
+                        [routerLink]="['/data-explorer', item.name]"
+                        (click)="openDetail($event, item.name)"
+                        class="shrink-0 p-2 rounded-lg border border-neutral-700 text-neutral-500 hover:text-angular-red hover:border-angular-red/40 transition-colors no-underline"
+                        [attr.aria-label]="'dataExplorer.col.action' | translate : ts.currentLanguage()"
+                      >
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                          <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
                     </div>
-                  </a>
+                  </div>
                 }
               }
             </div>
@@ -460,6 +523,7 @@ export class DataExplorer {
 
   protected readonly page     = signal(1);
   protected readonly pageSize = signal<PageSize>(20);
+  protected readonly copiedKey = signal<string | null>(null);
 
   private readonly offset = computed(() => (this.page() - 1) * this.pageSize());
 
@@ -512,6 +576,19 @@ export class DataExplorer {
   protected readonly showingTo = computed(() =>
     Math.min(this.offset() + this.pageSize(), this.totalCount())
   );
+
+  protected openDetail(e: MouseEvent, name: string): void {
+    e.stopPropagation();
+    this.svc.setSelected(name);
+  }
+
+  protected copy(e: MouseEvent, text: string, key: string): void {
+    e.stopPropagation();
+    navigator.clipboard.writeText(text).then(() => {
+      this.copiedKey.set(key);
+      setTimeout(() => this.copiedKey.set(null), 1500);
+    }).catch(() => {});
+  }
 
   protected onSearchInput(value: string): void {
     this.searchInput.set(value);
