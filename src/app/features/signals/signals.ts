@@ -14,7 +14,7 @@ const CATEGORIES: Category[] = ['fruits', 'vegetables', 'grains'];
   selector: 'app-signals',
   imports: [],
   template: `
-    <div class="max-w-5xl space-y-6">
+    <div class="max-w-5xl mx-auto space-y-6">
 
       <!-- Page header -->
       <div>

@@ -25,7 +25,7 @@ const TAKEN_USERNAMES = ['admin', 'root', 'angular', 'user', 'test'];
   selector: 'app-signal-forms',
   imports: [FormRoot, FormField],
   template: `
-    <div class="max-w-6xl space-y-8">
+    <div class="max-w-6xl mx-auto space-y-8">
 
       <!-- Header -->
       <div>

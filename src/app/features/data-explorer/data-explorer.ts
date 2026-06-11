@@ -192,6 +192,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                   </div>
                   <a
                     [routerLink]="['/data-explorer', searchResource.value()!.name]"
+                    (click)="svc.setSelected(searchResource.value()!.name)"
                     class="inline-flex items-center gap-2 rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red transition-colors no-underline"
                   >
                     {{ 'common.learnMore' | translate : ts.currentLanguage() }}
@@ -272,8 +273,9 @@ type PageSize = (typeof PAGE_SIZES)[number];
                   @let detail = getDetail(item.name);
                   <a
                     [routerLink]="['/data-explorer', item.name]"
-                    class="stagger-item no-underline text-neutral-400 border-b border-neutral-800/50 last:border-0 hover:bg-surface-700 hover:text-neutral-100 transition-colors focus:outline-none focus:bg-surface-700 focus:text-neutral-100"
-                    [class.bg-surface-800]="even"
+                    (click)="svc.setSelected(item.name)"
+                    class="de-row group stagger-item no-underline text-neutral-400 border-b border-neutral-800/50 last:border-0 focus:outline-none"
+                    [class.de-row--selected]="svc.selectedName() === item.name"
                     [style.animation-delay.ms]="i * 30"
                   >
                     <!-- Desktop row (lg+) -->
@@ -285,7 +287,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                         <img
                           [src]="svc.artworkUrl(svc.extractId(item.url))"
                           [alt]="svc.capitalize(item.name)"
-                          class="h-10 w-10 object-contain"
+                          class="h-10 w-10 object-contain transition-transform duration-200 group-hover:scale-110"
                           loading="lazy"
                         />
                       </div>
@@ -327,7 +329,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                     </div>
 
                     <!-- Tablet row (md only) -->
-                    <div class="hidden md:grid md:lg:hidden md:grid-cols-[3.5rem_4.5rem_1fr_auto] items-center gap-3 px-4 py-2.5">
+                    <div class="hidden md:grid lg:hidden md:grid-cols-[3.5rem_4.5rem_1fr_auto] items-center gap-3 px-4 py-2.5">
                       <span class="font-mono text-xs text-neutral-500">
                         #{{ svc.extractId(item.url).toString().padStart(4, '0') }}
                       </span>
@@ -335,7 +337,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                         <img
                           [src]="svc.artworkUrl(svc.extractId(item.url))"
                           [alt]="svc.capitalize(item.name)"
-                          class="h-10 w-10 object-contain"
+                          class="h-10 w-10 object-contain transition-transform duration-200 group-hover:scale-110"
                           loading="lazy"
                         />
                       </div>
@@ -368,7 +370,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                         <img
                           [src]="svc.artworkUrl(svc.extractId(item.url))"
                           [alt]="svc.capitalize(item.name)"
-                          class="h-12 w-12 object-contain"
+                          class="h-12 w-12 object-contain transition-transform duration-200 group-hover:scale-110"
                           loading="lazy"
                         />
                       </div>

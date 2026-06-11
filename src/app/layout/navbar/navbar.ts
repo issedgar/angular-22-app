@@ -74,30 +74,6 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
         >
           <span class="block w-4 h-4 rounded-full border-2 border-white/20 transition-colors" [style.background]="appearance.primaryColor()"></span>
         </button>
-
-        @if (colorPickerOpen()) {
-          <!-- Backdrop -->
-          <div class="fixed inset-0 z-40" (click)="colorPickerOpen.set(false)"></div>
-          <!-- Popover -->
-          <div class="color-picker-popover absolute right-0 top-full mt-2 z-50 rounded-xl border border-neutral-700 bg-surface-800 shadow-elevated p-3 min-w-44">
-            <p class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2 px-1">
-              {{ 'theme.primary' | translate : ts.currentLanguage() }}
-            </p>
-            <div class="flex flex-wrap gap-2 justify-start">
-              @for (preset of colorPresets; track preset.key) {
-                <button
-                  (click)="selectColor(preset)"
-                  class="w-7 h-7 rounded-full border-2 transition-all hover:scale-110"
-                  [style.background]="preset.value"
-                  [class.border-white]="appearance.primaryColor() === preset.value"
-                  [class.border-transparent]="appearance.primaryColor() !== preset.value"
-                  [title]="preset.labelKey | translate : ts.currentLanguage()"
-                  type="button"
-                ></button>
-              }
-            </div>
-          </div>
-        }
       </div>
 
       <!-- Theme toggle -->
@@ -145,6 +121,29 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
         <span class="text-angular-red text-xs font-semibold">v22</span>
       </div>
     </header>
+
+    <!-- Color picker portado fuera del header para escapar su stacking context (backdrop-blur crea uno nuevo) -->
+    @if (colorPickerOpen()) {
+      <div class="fixed inset-0 z-[199]" (click)="colorPickerOpen.set(false)"></div>
+      <div class="fixed top-16 right-4 z-[200] rounded-xl border border-neutral-700 bg-surface-800 shadow-elevated p-3 min-w-44">
+        <p class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2 px-1">
+          {{ 'theme.primary' | translate : ts.currentLanguage() }}
+        </p>
+        <div class="flex flex-wrap gap-2 justify-start">
+          @for (preset of colorPresets; track preset.key) {
+            <button
+              (click)="selectColor(preset)"
+              class="w-7 h-7 rounded-full border-2 transition-all hover:scale-110"
+              [style.background]="preset.value"
+              [class.border-white]="appearance.primaryColor() === preset.value"
+              [class.border-transparent]="appearance.primaryColor() !== preset.value"
+              [title]="preset.labelKey | translate : ts.currentLanguage()"
+              type="button"
+            ></button>
+          }
+        </div>
+      </div>
+    }
   `,
 })
 export class Navbar {

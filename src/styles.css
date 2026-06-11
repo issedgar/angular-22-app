@@ -162,3 +162,28 @@ button,
 .stagger-item {
   animation: stagger-fade-in 300ms cubic-bezier(0.23, 1, 0.32, 1) both;
 }
+
+/* ── Data Explorer table rows ─────────────────────────────────────────────── */
+.de-row {
+  display: block;
+  border-left: 3px solid transparent;
+  transition: background-color 160ms ease, border-left-color 160ms ease, color 160ms ease;
+}
+.de-row:nth-child(even) {
+  background-color: var(--color-surface-800);
+}
+.de-row:hover {
+  background-color: var(--color-surface-600);
+  border-left-color: color-mix(in srgb, var(--color-angular-red) 55%, transparent);
+  color: var(--color-neutral-100);
+}
+.de-row--selected,
+.de-row--selected:hover {
+  background-color: color-mix(in srgb, var(--color-angular-red) 22%, transparent) !important;
+  border-left-color: var(--color-angular-red) !important;
+  color: var(--color-neutral-100);
+}
+[data-theme="light"] .de-row--selected,
+[data-theme="light"] .de-row--selected:hover {
+  background-color: color-mix(in srgb, var(--color-angular-red) 10%, transparent) !important;
+}

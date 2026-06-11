@@ -1,4 +1,4 @@
-import { Service } from '@angular/core';
+import { Service, signal } from '@angular/core';
 
 const TYPE_COLORS: Record<string, string> = {
   normal: '#A8A878',
@@ -80,5 +80,11 @@ export class PokemonService {
 
   capitalize(name: string): string {
     return name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  readonly selectedName = signal<string | null>(null);
+
+  setSelected(name: string): void {
+    this.selectedName.set(name);
   }
 }

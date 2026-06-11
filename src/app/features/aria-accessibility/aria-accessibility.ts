@@ -30,7 +30,7 @@ const LIST_OPTIONS: ListOption[] = [
     Listbox, Option,
   ],
   template: `
-    <div class="max-w-6xl space-y-8">
+    <div class="max-w-6xl mx-auto space-y-8">
 
       <!-- Header -->
       <div>

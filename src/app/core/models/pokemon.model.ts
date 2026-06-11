@@ -19,6 +19,16 @@ export interface PokemonType {
   type: { name: string };
 }
 
+export interface PokemonAbility {
+  ability: { name: string; url: string };
+  is_hidden: boolean;
+  slot: number;
+}
+
+export interface PokemonMove {
+  move: { name: string; url: string };
+}
+
 export interface Pokemon {
   id: number;
   name: string;
@@ -27,6 +37,8 @@ export interface Pokemon {
   base_experience: number | null;
   types: PokemonType[];
   stats: PokemonStat[];
+  abilities: PokemonAbility[];
+  moves: PokemonMove[];
   sprites: {
     other: {
       'official-artwork': {

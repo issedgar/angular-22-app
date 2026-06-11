@@ -121,7 +121,7 @@ const STATS: Stat[] = [
   selector: 'app-dashboard',
   imports: [RouterLink, TranslatePipe],
   template: `
-    <div class="max-w-6xl space-y-8">
+    <div class="max-w-6xl mx-auto space-y-8">
 
       <!-- ── Hero ────────────────────────────────────────────── -->
       <section

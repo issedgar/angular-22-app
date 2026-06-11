@@ -96,7 +96,10 @@
     "height": "Altura",
     "weight": "Peso",
     "baseExp": "Exp. Base",
-    "baseStats": "Estadísticas Base"
+    "baseStats": "Estadísticas Base",
+    "abilities": "Habilidades",
+    "hiddenAbility": "Oculta",
+    "moves": "Movimientos"
   },
   "dashboard": {
     "title": "Angular 22 Showcase",
