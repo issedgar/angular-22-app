@@ -54,11 +54,11 @@ Abre `http://localhost:4200` en el navegador. La app se reconstruye automáticam
 
 | Dashboard (oscuro) | Dashboard (claro) |
 |---|---|
-| ![Dashboard oscuro](review/new-dashboard-dark.png) | ![Dashboard claro](review/new-dashboard-light.png) |
+| ![Dashboard oscuro](docs/screenshots/new-dashboard-dark.png) | ![Dashboard claro](docs/screenshots/new-dashboard-light.png) |
 
 | Data Explorer | Detalle Pokémon |
 |---|---|
-| ![Data Explorer](review/new-data-explorer-dark.png) | ![Detalle Pokémon](review/new-pokemon-detail-light.png) |
+| ![Data Explorer](docs/screenshots/new-data-explorer-dark.png) | ![Detalle Pokémon](docs/screenshots/new-pokemon-detail-light.png) |
 
 ---
 
