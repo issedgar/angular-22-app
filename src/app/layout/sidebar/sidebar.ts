@@ -143,8 +143,9 @@ const BADGE_KEY: Record<NavItem['badge'], string> = {
     <aside [class]="sidebarClasses()" aria-label="Main navigation">
       <!-- Logo header -->
       <div class="flex items-center gap-3 px-4 h-16 border-b border-neutral-800 shrink-0">
-        <div class="w-8 h-8 rounded-lg bg-angular-red flex items-center justify-center text-white font-bold text-sm shrink-0 select-none">
-          A
+        <div class="relative w-8 h-8 rounded-lg bg-angular-red flex items-center justify-center text-white font-bold text-sm shrink-0 select-none">
+          <span class="relative z-10">A</span>
+          <div class="absolute inset-0 rounded-lg ring-2 ring-angular-red/20 ring-offset-2 ring-offset-surface-800"></div>
         </div>
         @if (!layout.sidebarCollapsed()) {
           <div class="overflow-hidden min-w-0">

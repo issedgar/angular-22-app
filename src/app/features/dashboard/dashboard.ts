@@ -134,11 +134,27 @@ const STATS: Stat[] = [
           <div class="absolute -bottom-8 right-40 h-48 w-48 rounded-full bg-angular-red/5 blur-2xl"></div>
         </div>
 
-        <!-- Angular shield watermark -->
-        <div class="pointer-events-none absolute right-8 top-1/2 hidden -translate-y-1/2 opacity-[0.04] lg:block" aria-hidden="true">
-          <svg class="h-60 w-60 text-angular-red" viewBox="0 0 250 250" fill="currentColor">
-            <polygon points="125,30 31.9,63.2 46.1,186.3 125,230 203.9,186.3 218.1,63.2"/>
-            <path fill="white" d="M125,52.1L66.8,182.6h21.7l11.7-29.2h49.4l11.7,29.2h21.7L125,52.1z M142,135.4h-34l17-40.9L142,135.4z"/>
+        <!-- Angular shield watermark — geometric pattern -->
+        <div class="pointer-events-none absolute right-0 top-0 hidden h-full w-1/2 lg:block" aria-hidden="true">
+          <svg class="h-full w-full text-angular-red/[0.04]" viewBox="0 0 500 400" fill="none" preserveAspectRatio="xMaxYMid slice">
+            <!-- Shield outline -->
+            <polygon points="250,40 150,80 165,280 250,340 335,280 350,80" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <!-- Inner A -->
+            <path d="M250,80 L195,260h25l12-35h36l12,35h25L250,80z M265,200h-30l15-50L265,200z" fill="currentColor" opacity="0.6"/>
+            <!-- Geometric lines radiating from shield -->
+            <line x1="250" y1="40" x2="250" y2="0" stroke="currentColor" stroke-width="0.5"/>
+            <line x1="350" y1="80" x2="500" y2="30" stroke="currentColor" stroke-width="0.5"/>
+            <line x1="335" y1="280" x2="500" y2="350" stroke="currentColor" stroke-width="0.5"/>
+            <line x1="150" y1="80" x2="0" y2="30" stroke="currentColor" stroke-width="0.5"/>
+            <line x1="165" y1="280" x2="0" y2="350" stroke="currentColor" stroke-width="0.5"/>
+            <!-- Horizontal grid lines -->
+            <line x1="0" y1="100" x2="500" y2="100" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+            <line x1="0" y1="200" x2="500" y2="200" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+            <line x1="0" y1="300" x2="500" y2="300" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+            <!-- Corner accents -->
+            <polyline points="460,20 480,20 480,40" stroke="currentColor" stroke-width="1" fill="none" opacity="0.5"/>
+            <polyline points="20,20 40,20" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
+            <polyline points="20,380 40,380" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
           </svg>
         </div>
 
@@ -175,7 +191,7 @@ const STATS: Stat[] = [
       <!-- ── Stats row ─────────────────────────────────────── -->
       <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
         @for (stat of stats; track stat.value) {
-          <div class="relative overflow-hidden rounded-xl border border-neutral-800 bg-surface-800 px-5 py-4 shadow-card">
+          <div class="dot-bg relative overflow-hidden rounded-xl border border-neutral-800 bg-surface-800 px-5 py-4 shadow-card">
             <div class="relative z-10">
               <p class="text-2xl font-bold text-neutral-100">{{ stat.value }}</p>
               <p class="mt-0.5 text-sm text-neutral-500">
@@ -201,10 +217,16 @@ const STATS: Stat[] = [
 
       <!-- ── Section header + filter ──────────────────────── -->
       <div class="flex flex-wrap items-center justify-between gap-4">
-        <h2 class="text-lg font-semibold text-neutral-200">
-          {{ 'dashboard.sections' | translate : ts.currentLanguage() }}
-          <span class="ml-2 text-sm font-normal text-neutral-500">({{ filteredFeatures().length }})</span>
-        </h2>
+        <div class="flex items-center gap-3">
+          <!-- Shield accent fragment -->
+          <svg class="h-5 w-5 text-angular-red/40 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <polygon points="12,2 4,6 5.5,18 12,22 18.5,18 20,6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+          <h2 class="text-lg font-semibold text-neutral-200">
+            {{ 'dashboard.sections' | translate : ts.currentLanguage() }}
+            <span class="ml-2 text-sm font-normal text-neutral-500">({{ filteredFeatures().length }})</span>
+          </h2>
+        </div>
 
         <div
           class="flex flex-wrap items-center gap-1.5"
@@ -237,7 +259,7 @@ const STATS: Stat[] = [
         @for (feature of filteredFeatures(); track feature.route; let i = $index) {
           <a
             [routerLink]="feature.route"
-            class="stagger-item group flex flex-col gap-4 rounded-xl border border-neutral-800 bg-surface-800 p-5 no-underline transition-all duration-200 hover:border-neutral-700 hover:bg-surface-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red shadow-card"
+            class="stagger-item dot-bg group flex flex-col gap-4 rounded-xl border border-neutral-800 bg-surface-800 p-5 no-underline transition-all duration-200 hover:border-neutral-700 hover:bg-surface-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red shadow-card"
             [style.animation-delay.ms]="i * 50"
           >
             <!-- Icon + badge -->

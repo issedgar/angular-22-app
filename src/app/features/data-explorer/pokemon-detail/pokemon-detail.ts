@@ -7,6 +7,13 @@ import { TranslatePipe } from '../../../core/i18n/translation.pipe';
 import { PokemonService } from '../../../core/services/pokemon.service';
 import { Pokemon } from '../../../core/models/pokemon.model';
 
+interface PokemonSpecies {
+  flavor_text_entries: Array<{
+    flavor_text: string;
+    language: { name: string };
+  }>;
+}
+
 @Component({
   selector: 'app-pokemon-detail',
   imports: [RouterLink, TranslatePipe],
@@ -81,6 +88,11 @@ import { Pokemon } from '../../../core/models/pokemon.model';
                   >{{ t.type.name }}</span>
                 }
               </div>
+              @if (flavorText()) {
+                <p class="text-sm text-white/70 italic leading-relaxed mb-5 max-w-lg">
+                  {{ flavorText() }}
+                </p>
+              }
               <!-- Physical stats as cards -->
               <div class="grid grid-cols-3 gap-3">
                 <div class="rounded-xl bg-black/20 backdrop-blur-sm px-3 py-2.5 text-center">
@@ -199,6 +211,19 @@ export class PokemonDetail {
     return n ? this.svc.detailUrl(n) : undefined;
   });
 
+  protected readonly species = httpResource<PokemonSpecies>(() => {
+    const n = this.name();
+    return n ? this.svc.speciesUrl(n) : undefined;
+  });
+
+  protected readonly flavorText = computed(() => {
+    const entries = this.species.value()?.flavor_text_entries;
+    if (!entries) return '';
+    const lang = this.ts.currentLanguage() === 'es' ? 'es' : 'en';
+    const entry = entries.find(e => e.language.name === lang) ?? entries.find(e => e.language.name === 'en');
+    return entry?.flavor_text.replace(/[\n\f]/g, ' ') ?? '';
+  });
+
   protected readonly artworkUrl = computed(() => {
     const p = this.pokemon.value();
     if (!p) return '';
@@ -222,8 +247,8 @@ export class PokemonDetail {
   );
 
   protected statBarColor(percent: number): string {
-    if (percent >= 70) return '#78C850';
-    if (percent >= 40) return '#F8D030';
-    return '#F08030';
+    if (percent >= 70) return 'var(--stat-high)';
+    if (percent >= 40) return 'var(--stat-mid)';
+    return 'var(--stat-low)';
   }
 }

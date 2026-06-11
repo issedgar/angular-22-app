@@ -52,6 +52,10 @@ export class PokemonService {
     return `${PokemonService.BASE}/${name.toLowerCase().trim()}`;
   }
 
+  speciesUrl(name: string): string {
+    return `https://pokeapi.co/api/v2/pokemon-species/${name.toLowerCase().trim()}`;
+  }
+
   typeColor(typeName: string): string {
     return TYPE_COLORS[typeName] ?? '#6b7280';
   }
