@@ -9,6 +9,29 @@ import { PokemonListResponse, Pokemon, PokemonSpecies } from '../../core/models/
 
 const PAGE_SIZES = [10, 20, 25, 50] as const;
 type PageSize = (typeof PAGE_SIZES)[number];
+const DEFAULT_PAGE_SIZE: PageSize = 10;
+const PAGE_SIZE_STORAGE_KEY = 'data-explorer.page-size';
+
+function getStoredPageSize(): PageSize {
+  if (typeof localStorage === 'undefined') return DEFAULT_PAGE_SIZE;
+
+  try {
+    const stored = Number(localStorage.getItem(PAGE_SIZE_STORAGE_KEY));
+    return PAGE_SIZES.includes(stored as PageSize) ? stored as PageSize : DEFAULT_PAGE_SIZE;
+  } catch {
+    return DEFAULT_PAGE_SIZE;
+  }
+}
+
+function storePageSize(size: PageSize): void {
+  if (typeof localStorage === 'undefined') return;
+
+  try {
+    localStorage.setItem(PAGE_SIZE_STORAGE_KEY, `${size}`);
+  } catch {
+    // Storage can be unavailable in restricted browser contexts.
+  }
+}
 
 @Component({
   selector: 'app-data-explorer',
@@ -63,43 +86,43 @@ type PageSize = (typeof PAGE_SIZES)[number];
           }
         </div>
 
-        <!-- Page size selector -->
         @if (!isSearchActive()) {
-          <div class="flex w-full items-center justify-between gap-2 shrink-0 sm:w-auto sm:justify-start">
-            <label class="text-xs text-neutral-500 hidden sm:inline whitespace-nowrap">
-              {{ 'paginator.rowsPerPage' | translate : ts.currentLanguage() }}
-            </label>
-            <select
-              [value]="pageSize()"
-              (change)="setPageSize(+$any($event.target).value)"
-              class="rounded-lg border border-neutral-700 bg-surface-800 py-2 pl-3 pr-7 text-sm text-neutral-300 focus:border-angular-red/50 focus:outline-none focus:ring-1 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors appearance-none"
+          <div class="flex w-full shrink-0 items-center gap-2 sm:ml-auto sm:w-auto">
+            <!-- Page size selector -->
+            <div class="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
+              <label class="hidden whitespace-nowrap text-xs text-neutral-500 sm:inline">
+                {{ 'paginator.rowsPerPage' | translate : ts.currentLanguage() }}
+              </label>
+              <select
+                [value]="pageSize()"
+                (change)="setPageSize(+$any($event.target).value)"
+                class="rounded-lg border border-neutral-700 bg-surface-800 py-2 pl-3 pr-7 text-sm text-neutral-300 focus:border-angular-red/50 focus:outline-none focus:ring-1 focus:ring-angular-red/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors appearance-none"
+              >
+                @for (size of pageSizes; track size) {
+                  <option [value]="size" [selected]="size === pageSize()">{{ size }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Refresh -->
+            <button
+              (click)="listResource.reload()"
+              type="button"
+              class="shrink-0 p-2 rounded-lg border border-neutral-700 text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
+              [attr.aria-label]="'common.retry' | translate : ts.currentLanguage()"
             >
-              @for (size of pageSizes; track size) {
-                <option [value]="size">{{ size }}</option>
-              }
-            </select>
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+
+            <!-- Total count -->
+            @if (totalCount() > 0) {
+              <span class="ml-auto shrink-0 text-xs text-neutral-500 sm:ml-2">
+                {{ showingFrom() }}–{{ showingTo() }} / {{ totalCount() }}
+              </span>
+            }
           </div>
-        }
-
-        <!-- Refresh -->
-        @if (!isSearchActive()) {
-          <button
-            (click)="listResource.reload()"
-            type="button"
-            class="shrink-0 self-start p-2 rounded-lg border border-neutral-700 text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors sm:self-auto"
-            [attr.aria-label]="'common.retry' | translate : ts.currentLanguage()"
-          >
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-              <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        }
-
-        <!-- Total count -->
-        @if (!isSearchActive() && totalCount() > 0) {
-          <span class="text-xs text-neutral-500 shrink-0 sm:ml-auto">
-            {{ showingFrom() }}–{{ showingTo() }} / {{ totalCount() }}
-          </span>
         }
       </div>
 
@@ -633,7 +656,7 @@ export class DataExplorer {
   protected readonly isSearchActive = computed(() => !!this.debouncedSearch.value()?.trim());
 
   protected readonly page     = signal(1);
-  protected readonly pageSize = signal<PageSize>(20);
+  protected readonly pageSize = signal<PageSize>(getStoredPageSize());
   protected readonly copiedKey = signal<string | null>(null);
 
   private readonly offset = computed(() => (this.page() - 1) * this.pageSize());
@@ -767,7 +790,9 @@ export class DataExplorer {
 
   protected setPageSize(size: number): void {
     if (PAGE_SIZES.includes(size as PageSize)) {
-      this.pageSize.set(size as PageSize);
+      const nextSize = size as PageSize;
+      this.pageSize.set(nextSize);
+      storePageSize(nextSize);
       this.page.set(1);
     }
   }

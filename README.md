@@ -1,6 +1,52 @@
+<div align="center">
+
+![EN](https://img.shields.io/badge/EN-English-0d6efd?style=for-the-badge)&nbsp;&nbsp;[![ES](https://img.shields.io/badge/ES-Español-aaa?style=for-the-badge)](README.es.md)
+
+</div>
+
 # Angular 22 Showcase
 
 An interactive playground and reference application covering the key features of **Angular 22**. Each section demonstrates a specific API or pattern with live, editable examples — signal primitives, the Resource API, Signal Forms, ARIA accessibility, and more.
+
+<p align="center">
+  <a href="https://angular.dev"><img src="https://img.shields.io/badge/Angular-v22-DD0031?style=flat-square&logo=angular&logoColor=white" alt="Angular v22"></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 6"></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4"></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Node.js-24%2B-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js 24+"></a>
+  <a href="https://pnpm.io"><img src="https://img.shields.io/badge/pnpm-11-F69220?style=flat-square&logo=pnpm&logoColor=white" alt="pnpm 11"></a>
+  <img src="https://img.shields.io/badge/tests-57%20passing-6E9F18?style=flat-square&logo=vitest&logoColor=white" alt="57 tests passing">
+</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/Windows-supported-0078D4?style=flat-square&logo=windows&logoColor=white" alt="Windows">
+  <img src="https://img.shields.io/badge/macOS-supported-000000?style=flat-square&logo=apple&logoColor=white" alt="macOS">
+  <img src="https://img.shields.io/badge/Linux-supported-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Linux">
+</p>
+<p align="center">
+  <a href="https://github.com/issedgar"><img src="https://img.shields.io/badge/by-issedgar-181717?style=flat-square&logo=github&logoColor=white" alt="by issedgar"></a>
+</p>
+
+---
+
+## Getting started
+
+**Prerequisites:** Node.js ≥ 24.16.0 and pnpm ≥ 11.5.3.
+
+```powershell
+# 1. Clone the repo
+git clone <repo-url>
+cd angular-22-app
+
+# 2. Install dependencies
+pnpm install
+
+# 3. Start the dev server
+pnpm start
+```
+
+Open `http://localhost:4200` in your browser. The app rebuilds automatically on file changes.
+
+> If you don't have pnpm installed: `npm install -g pnpm`  
+> If you don't have the right Node version: `nvm install 24 && nvm use 24`
 
 ---
 
@@ -8,11 +54,11 @@ An interactive playground and reference application covering the key features of
 
 | Dashboard (dark) | Dashboard (light) |
 |---|---|
-| ![Dashboard dark](review/phase6-dashboard-dark.png) | ![Dashboard light](review/phase6-dashboard-light.png) |
+| ![Dashboard dark](review/new-dashboard-dark.png) | ![Dashboard light](review/new-dashboard-light.png) |
 
 | Data Explorer | Pokémon Detail |
 |---|---|
-| ![Data Explorer](review/phase6-data-explorer-dark.png) | ![Pokémon Detail](review/phase6-pokemon-detail-light.png) |
+| ![Data Explorer](review/new-data-explorer-dark.png) | ![Pokémon Detail](review/new-pokemon-detail-light.png) |
 
 ---
 
@@ -62,18 +108,6 @@ An interactive playground and reference application covering the key features of
 - **Fully lazy-loaded** — every feature route is a standalone component loaded on demand.
 - **57 unit tests** — Vitest + jsdom covering signals, reactive forms, and component lab.
 - **WCAG AA** — semantic HTML, visible focus states, ARIA patterns via `@angular/aria`.
-
----
-
-## Getting started
-
-```powershell
-# Install dependencies
-pnpm install
-
-# Start the dev server (http://localhost:4200)
-pnpm start
-```
 
 ---
 
