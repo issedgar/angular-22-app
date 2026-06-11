@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "dataExplorer": "Data Explorer",
+    "signals": "Signals",
+    "resourceApi": "Resource API",
+    "signalForms": "Signal Forms",
+    "reactiveForms": "Reactive Forms",
+    "templates": "Template Syntax",
+    "router": "Router",
+    "di": "Dependency Injection",
+    "aria": "ARIA / Accessibility",
+    "componentsLab": "Components Lab",
+    "performance": "Performance",
+    "groups": {
+      "data": "Data",
+      "reactivity": "Reactivity",
+      "forms": "Forms",
+      "core": "Core",
+      "uiA11y": "UI & A11y"
+    }
+  },
+  "badge": {
+    "stable": "STABLE",
+    "new": "NEW",
+    "experimental": "EXPERIMENTAL"
+  },
+  "navbar": {
+    "appName": "Angular 22",
+    "showcase": "Showcase",
+    "toggleSidebar": "Toggle sidebar",
+    "openNav": "Open navigation",
+    "selectLang": "Select language",
+    "langEn": "English",
+    "langEs": "Español"
+  },
+  "sidebar": {
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "empty": "No results found",
+    "search": "Search",
+    "back": "Back",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "showCode": "Show code",
+    "hideCode": "Hide code",
+    "learnMore": "Learn more",
+    "viewDocs": "View docs"
+  },
+  "dashboard": {
+    "title": "Angular 22 Showcase",
+    "subtitle": "A modern playground and reference for Angular 22 features, patterns, and capabilities.",
+    "explore": "Explore features",
+    "sections": "Sections",
+    "builtWith": "Built with Angular 22"
+  },
+  "sections": {
+    "dataExplorer": {
+      "title": "Data Explorer",
+      "description": "Remote table with httpResource(), server-side pagination, search, and Pokémon detail view."
+    },
+    "signals": {
+      "title": "Signals",
+      "description": "signal(), computed(), effect(), linkedSignal(), and debounced() (experimental)."
+    },
+    "signalForms": {
+      "title": "Signal Forms",
+      "description": "New Angular 22 forms API: form(), validators, async validation, and real-time state."
+    },
+    "reactiveForms": {
+      "title": "Reactive Forms",
+      "description": "Classic FormGroup, FormControl, sync/async validators, and dynamic fields."
+    },
+    "resourceApi": {
+      "title": "Resource API",
+      "description": "resource(), rxResource(), httpResource(), reload(), and automatic cancellation."
+    },
+    "templates": {
+      "title": "Template Syntax",
+      "description": "@if, @for, @switch with @default never, @defer, @let, spread syntax, and ng-content."
+    },
+    "router": {
+      "title": "Router",
+      "description": "Route params, guards, resolvers, lazy loading, events, and programmatic navigation."
+    },
+    "di": {
+      "title": "Dependency Injection",
+      "description": "@Service(), inject(), injectAsync() with onIdle prefetch, and InjectionToken."
+    },
+    "aria": {
+      "title": "ARIA / Accessibility",
+      "description": "@angular/aria headless components: accordion, tabs, listbox, combobox, keyboard navigation."
+    },
+    "componentsLab": {
+      "title": "Components Lab",
+      "description": "Visual showcase of all shared UI components: buttons, cards, badges, modal, toast."
+    },
+    "performance": {
+      "title": "Performance",
+      "description": "OnPush default, ChangeDetectionStrategy.Eager, @defer, track in @for, pure pipes."
+    }
+  }
+}

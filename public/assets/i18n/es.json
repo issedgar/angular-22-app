@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "dashboard": "Inicio",
+    "dataExplorer": "Explorador de Datos",
+    "signals": "Señales",
+    "resourceApi": "API de Recursos",
+    "signalForms": "Formularios de Señales",
+    "reactiveForms": "Formularios Reactivos",
+    "templates": "Sintaxis de Plantillas",
+    "router": "Enrutador",
+    "di": "Inyección de Dependencias",
+    "aria": "ARIA / Accesibilidad",
+    "componentsLab": "Laboratorio de Componentes",
+    "performance": "Rendimiento",
+    "groups": {
+      "data": "Datos",
+      "reactivity": "Reactividad",
+      "forms": "Formularios",
+      "core": "Núcleo",
+      "uiA11y": "UI y A11y"
+    }
+  },
+  "badge": {
+    "stable": "ESTABLE",
+    "new": "NUEVO",
+    "experimental": "EXPERIMENTAL"
+  },
+  "navbar": {
+    "appName": "Angular 22",
+    "showcase": "Vitrina",
+    "toggleSidebar": "Alternar barra lateral",
+    "openNav": "Abrir navegación",
+    "selectLang": "Seleccionar idioma",
+    "langEn": "English",
+    "langEs": "Español"
+  },
+  "sidebar": {
+    "expandSidebar": "Expandir barra lateral",
+    "collapseSidebar": "Colapsar barra lateral"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "retry": "Reintentar",
+    "empty": "Sin resultados",
+    "search": "Buscar",
+    "back": "Volver",
+    "close": "Cerrar",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "showCode": "Mostrar código",
+    "hideCode": "Ocultar código",
+    "learnMore": "Saber más",
+    "viewDocs": "Ver documentación"
+  },
+  "dashboard": {
+    "title": "Angular 22 Showcase",
+    "subtitle": "Un playground moderno y referencia de features, patrones y capacidades de Angular 22.",
+    "explore": "Explorar features",
+    "sections": "Secciones",
+    "builtWith": "Construido con Angular 22"
+  },
+  "sections": {
+    "dataExplorer": {
+      "title": "Explorador de Datos",
+      "description": "Tabla remota con httpResource(), paginación server-side, búsqueda y vista detalle Pokémon."
+    },
+    "signals": {
+      "title": "Señales",
+      "description": "signal(), computed(), effect(), linkedSignal() y debounced() (experimental)."
+    },
+    "signalForms": {
+      "title": "Formularios de Señales",
+      "description": "Nueva API de formularios Angular 22: form(), validators, validación asíncrona y estado en tiempo real."
+    },
+    "reactiveForms": {
+      "title": "Formularios Reactivos",
+      "description": "FormGroup, FormControl clásicos, validadores síncronos/asíncronos y campos dinámicos."
+    },
+    "resourceApi": {
+      "title": "API de Recursos",
+      "description": "resource(), rxResource(), httpResource(), reload() y cancelación automática."
+    },
+    "templates": {
+      "title": "Sintaxis de Plantillas",
+      "description": "@if, @for, @switch con @default never, @defer, @let, sintaxis spread y ng-content."
+    },
+    "router": {
+      "title": "Enrutador",
+      "description": "Parámetros de ruta, guards, resolvers, lazy loading, eventos y navegación programática."
+    },
+    "di": {
+      "title": "Inyección de Dependencias",
+      "description": "@Service(), inject(), injectAsync() con onIdle prefetch e InjectionToken."
+    },
+    "aria": {
+      "title": "ARIA / Accesibilidad",
+      "description": "Componentes headless @angular/aria: accordion, tabs, listbox, combobox, navegación por teclado."
+    },
+    "componentsLab": {
+      "title": "Laboratorio de Componentes",
+      "description": "Vitrina visual de todos los componentes UI compartidos: botones, cards, badges, modal, toast."
+    },
+    "performance": {
+      "title": "Rendimiento",
+      "description": "OnPush por defecto, ChangeDetectionStrategy.Eager, @defer, track en @for, pipes puras."
+    }
+  }
+}
