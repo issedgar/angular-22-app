@@ -18,8 +18,11 @@ interface Feature {
 interface Stat {
   value: string;
   label: string;
+  descriptionKey: string;
   isKey: boolean;
-  sparkline: string;
+  icon: string;
+  iconClass: string;
+  pattern: string;
 }
 
 const FEATURES: Feature[] = [
@@ -111,10 +114,42 @@ const BADGE_CLASSES: Record<BadgeType, string> = {
 const FILTER_OPTIONS: BadgeFilter[] = ['all', 'stable', 'new', 'experimental'];
 
 const STATS: Stat[] = [
-  { value: '11', label: 'dashboard.sections', isKey: true, sparkline: 'M0 35 L12 28 L24 30 L36 22 L48 24 L60 16 L72 12 L80 8' },
-  { value: 'v22', label: 'Angular', isKey: false, sparkline: 'M0 30 L12 25 L24 28 L36 20 L48 18 L60 15 L72 12 L80 8' },
-  { value: 'TS 6', label: 'TypeScript', isKey: false, sparkline: 'M0 32 L12 26 L24 30 L36 24 L48 20 L60 16 L72 14 L80 10' },
-  { value: 'TW 4', label: 'Tailwind', isKey: false, sparkline: 'M0 28 L12 32 L24 24 L36 28 L48 18 L60 14 L72 16 L80 9' },
+  {
+    value: '11',
+    label: 'dashboard.sections',
+    descriptionKey: 'dashboard.stack.sections',
+    isKey: true,
+    icon: 'M4.5 6.75A2.25 2.25 0 016.75 4.5h10.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25H6.75a2.25 2.25 0 01-2.25-2.25V6.75zm3 1.5h9m-9 3.75h9m-9 3.75h5.25',
+    iconClass: 'text-angular-red',
+    pattern: 'bg-[radial-gradient(circle_at_20%_20%,rgba(221,0,49,0.18),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.04),transparent)]',
+  },
+  {
+    value: 'v22',
+    label: 'Angular',
+    descriptionKey: 'dashboard.stack.angular',
+    isKey: false,
+    icon: 'M12 2.25L4.5 5.625l1.125 11.25L12 21.75l6.375-4.875L19.5 5.625 12 2.25zm0 4.5l3 9h-2l-.5-1.5h-3L9 15.75H7l3-9h2zm-.5 5.75L11 10.75l-.5 1.75h1z',
+    iconClass: 'text-red-400',
+    pattern: 'bg-[linear-gradient(135deg,rgba(221,0,49,0.2),transparent_55%),radial-gradient(circle_at_85%_15%,rgba(255,65,248,0.18),transparent_25%)]',
+  },
+  {
+    value: 'TS 6',
+    label: 'TypeScript',
+    descriptionKey: 'dashboard.stack.typescript',
+    isKey: false,
+    icon: 'M4.5 5.25h15v13.5h-15V5.25zm3 3h5.25m-2.625 0v7.5m4.125-.375c.5.25 1.125.375 1.875.375 1.125 0 1.875-.5 1.875-1.375 0-.75-.5-1.125-1.625-1.5-1.125-.375-1.875-.875-1.875-1.875s.875-1.75 2.125-1.75c.625 0 1.125.125 1.5.25',
+    iconClass: 'text-blue-400',
+    pattern: 'bg-[linear-gradient(135deg,rgba(59,130,246,0.22),transparent_55%),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:auto,18px_18px]',
+  },
+  {
+    value: 'TW 4',
+    label: 'Tailwind',
+    descriptionKey: 'dashboard.stack.tailwind',
+    isKey: false,
+    icon: 'M3.75 13.5c1.5-3 3.75-4.5 6.75-4.5 1.8 0 3.075.675 4.125 2.025.6.75 1.275 1.125 2.025 1.125 1.125 0 2.025-.675 2.7-2.025-1.5 3-3.75 4.5-6.75 4.5-1.8 0-3.075-.675-4.125-2.025-.6-.75-1.275-1.125-2.025-1.125-1.125 0-2.025.675-2.7 2.025zm0 4.5c1.5-3 3.75-4.5 6.75-4.5 1.8 0 3.075.675 4.125 2.025.6.75 1.275 1.125 2.025 1.125 1.125 0 2.025-.675 2.7-2.025-1.5 3-3.75 4.5-6.75 4.5-1.8 0-3.075-.675-4.125-2.025-.6-.75-1.275-1.125-2.025-1.125-1.125 0-2.025.675-2.7 2.025z',
+    iconClass: 'text-cyan-400',
+    pattern: 'bg-[radial-gradient(circle_at_80%_20%,rgba(34,211,238,0.2),transparent_26%),linear-gradient(135deg,rgba(16,185,129,0.12),transparent_60%)]',
+  },
 ];
 
 @Component({
@@ -188,28 +223,33 @@ const STATS: Stat[] = [
       </section>
 
       <!-- ── Stats row ─────────────────────────────────────── -->
-      <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         @for (stat of stats; track stat.value) {
-          <div class="dot-bg relative overflow-hidden rounded-xl border border-neutral-800 bg-surface-800 px-5 py-4 shadow-card">
-            <div class="relative z-10">
-              <p class="text-2xl font-bold text-neutral-100">{{ stat.value }}</p>
-              <p class="mt-0.5 text-sm text-neutral-500">
-                @if (stat.isKey) {
-                  {{ stat.label | translate : ts.currentLanguage() }}
-                } @else {
-                  {{ stat.label }}
-                }
+          <div class="group relative min-h-36 overflow-hidden rounded-xl border border-neutral-800 bg-surface-800 p-5 shadow-card transition-colors duration-200 hover:border-neutral-700">
+            <div class="absolute inset-0 opacity-80 {{ stat.pattern }}" aria-hidden="true"></div>
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" aria-hidden="true"></div>
+            <div class="relative z-10 flex h-full flex-col justify-between gap-5">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-3xl font-bold tracking-tight text-neutral-100">{{ stat.value }}</p>
+                  <p class="mt-1 text-sm font-semibold text-neutral-300">
+                    @if (stat.isKey) {
+                      {{ stat.label | translate : ts.currentLanguage() }}
+                    } @else {
+                      {{ stat.label }}
+                    }
+                  </p>
+                </div>
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-700/80 ring-1 ring-neutral-800 transition-transform duration-200 group-hover:-translate-y-0.5">
+                  <svg class="h-5 w-5 {{ stat.iconClass }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path [attr.d]="stat.icon" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+              <p class="text-xs leading-relaxed text-neutral-500">
+                {{ stat.descriptionKey | translate : ts.currentLanguage() }}
               </p>
             </div>
-            <!-- Decorative sparkline -->
-            <svg
-              class="absolute bottom-0 right-0 h-10 w-20 text-angular-red/20"
-              viewBox="0 0 80 40"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path [attr.d]="stat.sparkline" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
           </div>
         }
       </div>

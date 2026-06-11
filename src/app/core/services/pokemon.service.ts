@@ -56,6 +56,10 @@ export class PokemonService {
     return `https://pokeapi.co/api/v2/pokemon-species/${name.toLowerCase().trim()}`;
   }
 
+  evolutionChainUrl(url: string): string {
+    return url;
+  }
+
   typeColor(typeName: string): string {
     return TYPE_COLORS[typeName] ?? '#6b7280';
   }
@@ -75,6 +79,11 @@ export class PokemonService {
 
   extractId(url: string): number {
     const match = /\/pokemon\/(\d+)\/$/.exec(url);
+    return match ? +match[1] : 0;
+  }
+
+  extractResourceId(url: string): number {
+    const match = /\/(\d+)\/$/.exec(url);
     return match ? +match[1] : 0;
   }
 

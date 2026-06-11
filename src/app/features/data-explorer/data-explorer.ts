@@ -5,7 +5,7 @@ import { httpResource } from '@angular/common/http';
 import { TranslationService } from '../../core/i18n/translation.service';
 import { TranslatePipe } from '../../core/i18n/translation.pipe';
 import { PokemonService } from '../../core/services/pokemon.service';
-import { PokemonListResponse, Pokemon } from '../../core/models/pokemon.model';
+import { PokemonListResponse, Pokemon, PokemonSpecies } from '../../core/models/pokemon.model';
 
 const PAGE_SIZES = [10, 20, 25, 50] as const;
 type PageSize = (typeof PAGE_SIZES)[number];
@@ -112,6 +112,78 @@ type PageSize = (typeof PAGE_SIZES)[number];
 
       <!-- Main table panel -->
       <div class="flex flex-col rounded-xl border border-neutral-800 bg-surface-800 overflow-hidden shadow-card flex-1 min-h-[340px] sm:min-h-[420px]">
+        <div class="shrink-0 border-b border-neutral-800 bg-surface-800/80 px-4 py-3 sm:px-5">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="flex h-2 w-2 rounded-full bg-angular-red"></span>
+                <h2 class="text-sm font-semibold text-neutral-200">
+                  {{ isSearchActive()
+                    ? ('dataExplorer.quickProfile' | translate : ts.currentLanguage())
+                    : ('dataExplorer.panelTitle' | translate : ts.currentLanguage()) }}
+                </h2>
+              </div>
+              <p class="mt-1 text-xs text-neutral-500">
+                {{ 'dataExplorer.panelMeta' | translate : ts.currentLanguage() }}
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              @if (!isSearchActive()) {
+                <span class="rounded-lg border border-neutral-700 bg-surface-700/60 px-2.5 py-1 text-xs text-neutral-400">
+                  {{ 'dataExplorer.loadedRange' | translate : ts.currentLanguage() }}:
+                  <span class="font-mono text-neutral-200">{{ showingFrom() }}–{{ showingTo() }}</span>
+                </span>
+              }
+              <span class="rounded-lg border border-neutral-700 bg-surface-700/60 px-2.5 py-1 text-xs text-neutral-400">
+                {{ 'paginator.total' | translate : ts.currentLanguage() }}:
+                <span class="font-mono text-neutral-200">{{ totalCount() || 1 }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        @if (!isSearchActive() && selectedDetail(); as selected) {
+          <div class="border-b border-neutral-800 bg-surface-900/35 px-4 py-3 sm:px-5">
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div class="flex min-w-0 items-center gap-3">
+                <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-neutral-800 bg-surface-700/70">
+                  <img
+                    [src]="svc.artworkUrl(selected.id)"
+                    [alt]="svc.capitalize(selected.name)"
+                    class="h-12 w-12 object-contain"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="min-w-0">
+                  <p class="font-mono text-[11px] text-neutral-500">#{{ selected.id.toString().padStart(4, '0') }}</p>
+                  <div class="mt-0.5 flex flex-wrap items-center gap-2">
+                    <h3 class="truncate text-base font-semibold text-neutral-100">{{ svc.capitalize(selected.name) }}</h3>
+                    @for (t of selected.types; track t.type.name) {
+                      <span
+                        class="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase text-white"
+                        [style.background]="svc.typeColor(t.type.name)"
+                      >{{ t.type.name }}</span>
+                    }
+                  </div>
+                  <p class="mt-1 text-xs text-neutral-500">
+                    {{ 'pokemon.battleProfile' | translate : ts.currentLanguage() }} ·
+                    {{ 'pokemon.height' | translate : ts.currentLanguage() }} {{ (selected.height / 10).toFixed(1) }} m ·
+                    {{ 'pokemon.weight' | translate : ts.currentLanguage() }} {{ (selected.weight / 10).toFixed(1) }} kg
+                  </p>
+                </div>
+              </div>
+              <a
+                [routerLink]="['/data-explorer', selected.name]"
+                class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-neutral-700 px-3 py-2 text-xs font-semibold text-neutral-300 no-underline transition-colors hover:border-angular-red/50 hover:bg-angular-red/10 hover:text-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red"
+              >
+                {{ 'dataExplorer.openProfile' | translate : ts.currentLanguage() }}
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        }
 
         <!-- Search result panel -->
         @if (isSearchActive()) {
@@ -147,28 +219,35 @@ type PageSize = (typeof PAGE_SIZES)[number];
                 </button>
               </div>
             } @else if (searchResource.hasValue()) {
-              <div class="flex flex-col sm:flex-row items-start gap-6 p-6">
-                <div class="mx-auto sm:mx-0">
-                  <div class="rounded-xl bg-surface-700 p-3 w-32 h-32 flex items-center justify-center">
+              <div class="relative overflow-hidden p-5 sm:p-6">
+                <div
+                  class="pointer-events-none absolute inset-y-0 left-0 w-72 opacity-20 blur-3xl"
+                  [style.background]="svc.typeColor(searchResource.value()!.types[0].type.name)"
+                  aria-hidden="true"
+                ></div>
+                <div class="relative grid grid-cols-1 gap-6 xl:grid-cols-[10rem_minmax(0,1fr)_18rem]">
+                  <div class="mx-auto xl:mx-0">
+                    <div class="relative flex h-40 w-40 items-center justify-center rounded-2xl border border-neutral-800 bg-surface-700/70 p-4">
+                      <span class="absolute left-3 top-3 font-mono text-[10px] text-neutral-500">
+                        #{{ searchResource.value()!.id.toString().padStart(4, '0') }}
+                      </span>
                     <img
                       [src]="svc.artworkUrl(searchResource.value()!.id)"
                       [alt]="svc.capitalize(searchResource.value()!.name)"
-                      class="w-24 h-24 object-contain"
+                        class="h-28 w-28 object-contain drop-shadow-2xl"
                       loading="lazy"
                     />
+                    </div>
                   </div>
-                </div>
-                <div class="flex-1 min-w-0 space-y-4">
-                  <div>
-                    <div class="flex flex-wrap items-center gap-3">
-                      <span class="font-mono text-xs text-neutral-500">
-                        #{{ searchResource.value()!.id.toString().padStart(4, '0') }}
-                      </span>
-                      <h2 class="text-xl font-bold text-neutral-100">
+                  <div class="min-w-0 space-y-4">
+                    <div>
+                      <p class="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                        {{ searchGenus() || ('pokemon.species' | translate : ts.currentLanguage()) }}
+                      </p>
+                      <h2 class="mt-1 text-2xl font-bold text-neutral-100">
                         {{ svc.capitalize(searchResource.value()!.name) }}
                       </h2>
-                    </div>
-                    <div class="flex flex-wrap gap-1.5 mt-2">
+                      <div class="mt-2 flex flex-wrap gap-1.5">
                       @for (t of searchResource.value()!.types; track t.type.name) {
                         <span
                           class="rounded-md px-2.5 py-0.5 text-xs font-bold uppercase text-white"
@@ -176,10 +255,49 @@ type PageSize = (typeof PAGE_SIZES)[number];
                         >{{ t.type.name }}</span>
                       }
                     </div>
+                    </div>
+                    @if (searchFlavorText()) {
+                      <p class="max-w-3xl text-sm leading-relaxed text-neutral-400">
+                        {{ searchFlavorText() }}
+                      </p>
+                    }
+                    <a
+                      [routerLink]="['/data-explorer', searchResource.value()!.name]"
+                      (click)="svc.setSelected(searchResource.value()!.name)"
+                      class="inline-flex items-center gap-2 rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors no-underline"
+                    >
+                      {{ 'dataExplorer.openProfile' | translate : ts.currentLanguage() }}
+                      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
                   </div>
-                  <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                  <div class="space-y-3">
+                    <div class="grid grid-cols-3 gap-2">
+                      <div class="rounded-xl border border-neutral-800 bg-surface-700/60 px-3 py-2 text-center">
+                        <p class="text-[10px] uppercase tracking-wider text-neutral-500">{{ 'pokemon.height' | translate : ts.currentLanguage() }}</p>
+                        <p class="mt-0.5 text-sm font-bold text-neutral-100">{{ (searchResource.value()!.height / 10).toFixed(1) }} m</p>
+                      </div>
+                      <div class="rounded-xl border border-neutral-800 bg-surface-700/60 px-3 py-2 text-center">
+                        <p class="text-[10px] uppercase tracking-wider text-neutral-500">{{ 'pokemon.weight' | translate : ts.currentLanguage() }}</p>
+                        <p class="mt-0.5 text-sm font-bold text-neutral-100">{{ (searchResource.value()!.weight / 10).toFixed(1) }} kg</p>
+                      </div>
+                      <div class="rounded-xl border border-neutral-800 bg-surface-700/60 px-3 py-2 text-center">
+                        <p class="text-[10px] uppercase tracking-wider text-neutral-500">{{ 'pokemon.baseExp' | translate : ts.currentLanguage() }}</p>
+                        <p class="mt-0.5 text-sm font-bold text-neutral-100">{{ searchResource.value()!.base_experience ?? '—' }}</p>
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                      @for (item of searchSpeciesMeta(); track item.label) {
+                        <div class="rounded-xl border border-neutral-800 bg-surface-700/40 px-3 py-2 text-center">
+                          <p class="text-[10px] uppercase tracking-wider text-neutral-500">{{ item.label }}</p>
+                          <p class="mt-0.5 truncate text-xs font-semibold text-neutral-200">{{ item.value }}</p>
+                        </div>
+                      }
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 sm:grid-cols-6 xl:grid-cols-3">
                     @for (stat of searchResource.value()!.stats; track stat.stat.name) {
-                      <div class="rounded-lg bg-surface-700 px-2.5 py-2 text-center">
+                        <div class="rounded-lg border border-neutral-800 bg-surface-700/40 px-2.5 py-2 text-center">
                         <p class="text-[10px] text-neutral-500 mb-0.5 uppercase tracking-wider">{{ svc.statLabel(stat.stat.name) }}</p>
                         <p class="text-base font-bold text-neutral-200">{{ stat.base_stat }}</p>
                         <div class="mt-1 h-1 rounded-full bg-surface-600">
@@ -191,16 +309,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                       </div>
                     }
                   </div>
-                  <a
-                    [routerLink]="['/data-explorer', searchResource.value()!.name]"
-                    (click)="svc.setSelected(searchResource.value()!.name)"
-                    class="inline-flex items-center gap-2 rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors no-underline"
-                  >
-                    {{ 'common.learnMore' | translate : ts.currentLanguage() }}
-                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                      <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </a>
+                  </div>
                 </div>
               </div>
             }
@@ -534,6 +643,11 @@ export class DataExplorer {
     return term ? this.svc.detailUrl(term) : undefined;
   });
 
+  protected readonly searchSpeciesResource = httpResource<PokemonSpecies>(() => {
+    const term = this.debouncedSearch.value()?.trim();
+    return term ? this.svc.speciesUrl(term) : undefined;
+  });
+
   protected readonly listResource = httpResource<PokemonListResponse>(
     () => this.svc.listUrl(this.pageSize(), this.offset()),
   );
@@ -568,6 +682,11 @@ export class DataExplorer {
     return this.detailsResource.value()?.get(name);
   }
 
+  protected readonly selectedDetail = computed(() => {
+    const name = this.svc.selectedName();
+    return name ? this.getDetail(name) : undefined;
+  });
+
   protected readonly totalCount  = computed(() => this.listResource.value()?.count ?? 0);
   protected readonly totalPages  = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize())));
   protected readonly currentPage = this.page.asReadonly();
@@ -578,6 +697,42 @@ export class DataExplorer {
   protected readonly showingTo = computed(() =>
     Math.min(this.offset() + this.pageSize(), this.totalCount())
   );
+
+  protected readonly searchFlavorText = computed(() => {
+    const entries = this.searchSpeciesResource.value()?.flavor_text_entries;
+    if (!entries) return '';
+    const lang = this.ts.currentLanguage() === 'es' ? 'es' : 'en';
+    const entry = entries.find(e => e.language.name === lang) ?? entries.find(e => e.language.name === 'en');
+    return entry?.flavor_text.replace(/[\n\f]/g, ' ') ?? '';
+  });
+
+  protected readonly searchGenus = computed(() => {
+    const genera = this.searchSpeciesResource.value()?.genera;
+    if (!genera) return '';
+    const lang = this.ts.currentLanguage() === 'es' ? 'es' : 'en';
+    return genera.find(g => g.language.name === lang)?.name
+      ?? genera.find(g => g.language.name === 'en')?.name
+      ?? '';
+  });
+
+  protected readonly searchSpeciesMeta = computed(() => {
+    const species = this.searchSpeciesResource.value();
+    if (!species) return [];
+    return [
+      {
+        label: this.ts.translate('pokemon.generation'),
+        value: this.svc.capitalize(species.generation.name),
+      },
+      {
+        label: this.ts.translate('pokemon.captureRate'),
+        value: `${species.capture_rate}`,
+      },
+      {
+        label: this.ts.translate('pokemon.baseHappiness'),
+        value: `${species.base_happiness}`,
+      },
+    ];
+  });
 
   protected openDetail(e: MouseEvent, name: string): void {
     e.stopPropagation();

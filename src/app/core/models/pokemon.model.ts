@@ -29,6 +29,43 @@ export interface PokemonMove {
   move: { name: string; url: string };
 }
 
+export interface PokemonSpeciesSummary {
+  name: string;
+  url: string;
+}
+
+export interface LocalizedName {
+  name: string;
+  language: { name: string };
+}
+
+export interface PokemonSpecies {
+  flavor_text_entries: Array<{
+    flavor_text: string;
+    language: { name: string };
+  }>;
+  genera: LocalizedName[];
+  generation: PokemonSpeciesSummary;
+  habitat: PokemonSpeciesSummary | null;
+  evolution_chain: { url: string };
+  capture_rate: number;
+  base_happiness: number;
+  egg_groups: PokemonSpeciesSummary[];
+  varieties: Array<{
+    is_default: boolean;
+    pokemon: PokemonSpeciesSummary;
+  }>;
+}
+
+export interface EvolutionChainLink {
+  species: PokemonSpeciesSummary;
+  evolves_to: EvolutionChainLink[];
+}
+
+export interface EvolutionChainResponse {
+  chain: EvolutionChainLink;
+}
+
 export interface Pokemon {
   id: number;
   name: string;

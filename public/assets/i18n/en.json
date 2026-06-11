@@ -82,6 +82,11 @@
     "searchPlaceholder": "Search by name or ID…",
     "searchHelper": "PokeAPI supports exact search by name or ID.",
     "noResultsFor": "No Pokémon found for",
+    "panelTitle": "Remote Pokédex",
+    "panelMeta": "Live data from PokéAPI",
+    "loadedRange": "Loaded range",
+    "quickProfile": "Quick profile",
+    "openProfile": "Open technical sheet",
     "col": {
       "id": "#",
       "image": "Image",
@@ -99,14 +104,30 @@
     "baseStats": "Base Stats",
     "abilities": "Abilities",
     "hiddenAbility": "Hidden",
-    "moves": "Moves"
+    "moves": "Moves",
+    "species": "Species",
+    "biology": "Biology",
+    "generation": "Generation",
+    "habitat": "Habitat",
+    "captureRate": "Capture",
+    "baseHappiness": "Happiness",
+    "eggGroups": "Egg groups",
+    "varieties": "Varieties",
+    "evolution": "Evolution",
+    "battleProfile": "Battle profile"
   },
   "dashboard": {
     "title": "Angular 22 Showcase",
     "subtitle": "A modern playground and reference for Angular 22 features, patterns, and capabilities.",
     "explore": "Explore features",
     "sections": "Sections",
-    "builtWith": "Built with Angular 22"
+    "builtWith": "Built with Angular 22",
+    "stack": {
+      "sections": "Lazy routes with real demos ready for inspection.",
+      "angular": "Standalone, signals, resource APIs, and modern router.",
+      "typescript": "Strict contracts for services, views, and remote models.",
+      "tailwind": "CSS-first tokens, themes, and responsive surfaces."
+    }
   },
   "forms": {
     "email": "Email",

@@ -82,6 +82,11 @@
     "searchPlaceholder": "Buscar por nombre o ID…",
     "searchHelper": "PokeAPI permite búsqueda exacta por nombre o ID.",
     "noResultsFor": "No se encontró un Pokémon para",
+    "panelTitle": "Pokédex remota",
+    "panelMeta": "Datos en vivo de PokéAPI",
+    "loadedRange": "Rango cargado",
+    "quickProfile": "Perfil rápido",
+    "openProfile": "Abrir ficha técnica",
     "col": {
       "id": "#",
       "image": "Imagen",
@@ -99,14 +104,30 @@
     "baseStats": "Estadísticas Base",
     "abilities": "Habilidades",
     "hiddenAbility": "Oculta",
-    "moves": "Movimientos"
+    "moves": "Movimientos",
+    "species": "Especie",
+    "biology": "Biología",
+    "generation": "Generación",
+    "habitat": "Hábitat",
+    "captureRate": "Captura",
+    "baseHappiness": "Felicidad",
+    "eggGroups": "Grupos huevo",
+    "varieties": "Variedades",
+    "evolution": "Evolución",
+    "battleProfile": "Perfil de combate"
   },
   "dashboard": {
     "title": "Angular 22 Showcase",
     "subtitle": "Un playground moderno y referencia de features, patrones y capacidades de Angular 22.",
     "explore": "Explorar features",
     "sections": "Secciones",
-    "builtWith": "Construido con Angular 22"
+    "builtWith": "Construido con Angular 22",
+    "stack": {
+      "sections": "Rutas lazy con demos reales listas para inspección.",
+      "angular": "Standalone, signals, resource APIs y router moderno.",
+      "typescript": "Contratos estrictos para servicios, vistas y modelos remotos.",
+      "tailwind": "Tokens CSS-first, temas y superficies responsivas."
+    }
   },
   "forms": {
     "email": "Correo electrónico",
