@@ -1,4 +1,4 @@
-import { Component, computed, debounced, inject, signal } from '@angular/core';
+import { Component, computed, debounced, inject, resource, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { httpResource } from '@angular/common/http';
 
@@ -14,7 +14,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
   selector: 'app-data-explorer',
   imports: [RouterLink, TranslatePipe],
   template: `
-    <div class="flex flex-col gap-4" style="min-height: 0">
+    <div class="flex flex-col gap-4 h-full">
 
       <!-- Section header -->
       <div class="shrink-0">
@@ -96,8 +96,8 @@ type PageSize = (typeof PAGE_SIZES)[number];
 
         <!-- Total count -->
         @if (!isSearchActive() && totalCount() > 0) {
-          <span class="text-xs text-neutral-500 hidden md:inline shrink-0">
-            {{ totalCount() }} {{ 'paginator.total' | translate : ts.currentLanguage() }}
+          <span class="text-xs text-neutral-500 shrink-0">
+            {{ showingFrom() }}–{{ showingTo() }} / {{ totalCount() }}
           </span>
         }
       </div>
@@ -109,8 +109,8 @@ type PageSize = (typeof PAGE_SIZES)[number];
         </p>
       }
 
-      <!-- Main table panel: max-height keeps paginator always visible without full-page scroll -->
-      <div class="flex flex-col rounded-xl border border-neutral-800 bg-surface-800 overflow-hidden" style="height: calc(100vh - 260px); min-height: 420px">
+      <!-- Main table panel -->
+      <div class="flex flex-col rounded-xl border border-neutral-800 bg-surface-800 overflow-hidden shadow-card flex-1 min-h-[420px]">
 
         <!-- Search result panel -->
         @if (isSearchActive()) {
@@ -146,12 +146,11 @@ type PageSize = (typeof PAGE_SIZES)[number];
                 </button>
               </div>
             } @else if (searchResource.hasValue()) {
-              <!-- Single search result -->
               <div class="flex flex-col sm:flex-row items-start gap-6 p-6">
                 <div class="mx-auto sm:mx-0">
                   <div class="rounded-xl bg-surface-700 p-3 w-32 h-32 flex items-center justify-center">
                     <img
-                      [src]="svc.spriteUrl(searchResource.value()!.id)"
+                      [src]="svc.artworkUrl(searchResource.value()!.id)"
                       [alt]="svc.capitalize(searchResource.value()!.name)"
                       class="w-24 h-24 object-contain"
                       loading="lazy"
@@ -209,7 +208,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
           <!-- Pokemon list table -->
           <div class="flex flex-col flex-1 overflow-hidden">
             <!-- Sticky table header -->
-            <div class="shrink-0 hidden md:grid md:grid-cols-[4rem_4.5rem_10rem_1fr_auto] items-center gap-4 border-b border-neutral-800 px-4 py-2.5 bg-surface-800">
+            <div class="shrink-0 hidden lg:grid lg:grid-cols-[3.5rem_4.5rem_10rem_1fr_5rem_5rem_auto] items-center gap-3 border-b border-neutral-800 px-4 py-2.5 bg-surface-800">
               <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
                 {{ 'dataExplorer.col.id' | translate : ts.currentLanguage() }}
               </span>
@@ -219,7 +218,29 @@ type PageSize = (typeof PAGE_SIZES)[number];
               <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
                 {{ 'dataExplorer.col.name' | translate : ts.currentLanguage() }}
               </span>
-              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">URL</span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
+                {{ 'dataExplorer.col.types' | translate : ts.currentLanguage() }}
+              </span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600 text-right">
+                {{ 'dataExplorer.col.height' | translate : ts.currentLanguage() }}
+              </span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600 text-right">
+                {{ 'dataExplorer.col.weight' | translate : ts.currentLanguage() }}
+              </span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600 flex justify-end pr-1">
+                {{ 'dataExplorer.col.action' | translate : ts.currentLanguage() }}
+              </span>
+            </div>
+
+            <!-- Tablet header -->
+            <div class="shrink-0 hidden md:grid md:lg:hidden md:grid-cols-[3.5rem_4.5rem_1fr_auto] items-center gap-3 border-b border-neutral-800 px-4 py-2.5 bg-surface-800">
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">#</span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
+                {{ 'dataExplorer.col.image' | translate : ts.currentLanguage() }}
+              </span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
+                {{ 'dataExplorer.col.name' | translate : ts.currentLanguage() }}
+              </span>
               <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600 flex justify-end pr-1">
                 {{ 'dataExplorer.col.action' | translate : ts.currentLanguage() }}
               </span>
@@ -247,29 +268,92 @@ type PageSize = (typeof PAGE_SIZES)[number];
                   </button>
                 </div>
               } @else {
-                @for (item of listResource.value()?.results ?? []; track item.name; let even = $even) {
+                @for (item of listResource.value()?.results ?? []; track item.name; let even = $even; let i = $index) {
+                  @let detail = getDetail(item.name);
                   <a
                     [routerLink]="['/data-explorer', item.name]"
-                    class="no-underline text-neutral-400 border-b border-neutral-800/50 last:border-0 hover:bg-surface-700 hover:text-neutral-100 transition-colors focus:outline-none focus:bg-surface-700 focus:text-neutral-100"
+                    class="stagger-item no-underline text-neutral-400 border-b border-neutral-800/50 last:border-0 hover:bg-surface-700 hover:text-neutral-100 transition-colors focus:outline-none focus:bg-surface-700 focus:text-neutral-100"
                     [class.bg-surface-800]="even"
+                    [style.animation-delay.ms]="i * 30"
                   >
-                    <!-- Desktop row -->
-                    <div class="hidden md:grid md:grid-cols-[4rem_4.5rem_10rem_1fr_auto] items-center gap-4 px-4 py-3">
+                    <!-- Desktop row (lg+) -->
+                    <div class="hidden lg:grid lg:grid-cols-[3.5rem_4.5rem_10rem_1fr_5rem_5rem_auto] items-center gap-3 px-4 py-2.5">
                       <span class="font-mono text-xs text-neutral-500">
                         #{{ svc.extractId(item.url).toString().padStart(4, '0') }}
                       </span>
-                      <div class="flex items-center justify-center h-14 w-14 rounded-lg bg-surface-700/50">
+                      <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-surface-700/50">
                         <img
-                          [src]="svc.spriteUrl(svc.extractId(item.url))"
+                          [src]="svc.artworkUrl(svc.extractId(item.url))"
                           [alt]="svc.capitalize(item.name)"
-                          class="h-12 w-12 object-contain"
+                          class="h-10 w-10 object-contain"
                           loading="lazy"
                         />
                       </div>
-                      <span class="text-sm font-semibold text-neutral-200">{{ svc.capitalize(item.name) }}</span>
-                      <span class="text-xs text-neutral-600 font-mono truncate">{{ item.url }}</span>
+                      <span class="text-sm font-semibold text-neutral-200 truncate">{{ svc.capitalize(item.name) }}</span>
+                      <div class="flex flex-wrap gap-1">
+                        @if (detail) {
+                          @for (t of detail.types; track t.type.name) {
+                            <span
+                              class="rounded px-2 py-0.5 text-[10px] font-bold uppercase text-white"
+                              [style.background]="svc.typeColor(t.type.name)"
+                            >{{ t.type.name }}</span>
+                          }
+                        } @else {
+                          <div class="h-5 w-16 rounded bg-surface-600 animate-pulse"></div>
+                        }
+                      </div>
+                      <span class="text-xs text-neutral-400 text-right tabular-nums">
+                        @if (detail) {
+                          {{ (detail.height / 10).toFixed(1) }} m
+                        } @else {
+                          <span class="inline-block h-3 w-10 rounded bg-surface-600 animate-pulse"></span>
+                        }
+                      </span>
+                      <span class="text-xs text-neutral-400 text-right tabular-nums">
+                        @if (detail) {
+                          {{ (detail.weight / 10).toFixed(1) }} kg
+                        } @else {
+                          <span class="inline-block h-3 w-10 rounded bg-surface-600 animate-pulse"></span>
+                        }
+                      </span>
                       <div class="flex justify-end pr-1">
                         <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 transition-colors" [attr.aria-label]="'dataExplorer.col.action' | translate : ts.currentLanguage()">
+                          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Tablet row (md only) -->
+                    <div class="hidden md:grid md:lg:hidden md:grid-cols-[3.5rem_4.5rem_1fr_auto] items-center gap-3 px-4 py-2.5">
+                      <span class="font-mono text-xs text-neutral-500">
+                        #{{ svc.extractId(item.url).toString().padStart(4, '0') }}
+                      </span>
+                      <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-surface-700/50">
+                        <img
+                          [src]="svc.artworkUrl(svc.extractId(item.url))"
+                          [alt]="svc.capitalize(item.name)"
+                          class="h-10 w-10 object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-semibold text-neutral-200 truncate">{{ svc.capitalize(item.name) }}</p>
+                        @if (detail) {
+                          <div class="flex flex-wrap gap-1 mt-0.5">
+                            @for (t of detail.types; track t.type.name) {
+                              <span
+                                class="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase text-white"
+                                [style.background]="svc.typeColor(t.type.name)"
+                              >{{ t.type.name }}</span>
+                            }
+                          </div>
+                        }
+                      </div>
+                      <div class="flex justify-end pr-1">
+                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 transition-colors">
                           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                             <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/>
@@ -282,7 +366,7 @@ type PageSize = (typeof PAGE_SIZES)[number];
                     <div class="flex md:hidden items-center gap-3 px-4 py-3">
                       <div class="h-14 w-14 shrink-0 rounded-lg bg-surface-700/50 flex items-center justify-center">
                         <img
-                          [src]="svc.spriteUrl(svc.extractId(item.url))"
+                          [src]="svc.artworkUrl(svc.extractId(item.url))"
                           [alt]="svc.capitalize(item.name)"
                           class="h-12 w-12 object-contain"
                           loading="lazy"
@@ -291,6 +375,16 @@ type PageSize = (typeof PAGE_SIZES)[number];
                       <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold text-neutral-200">{{ svc.capitalize(item.name) }}</p>
                         <p class="text-xs font-mono text-neutral-500">#{{ svc.extractId(item.url).toString().padStart(4, '0') }}</p>
+                        @if (detail) {
+                          <div class="flex flex-wrap gap-1 mt-1">
+                            @for (t of detail.types; track t.type.name) {
+                              <span
+                                class="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase text-white"
+                                [style.background]="svc.typeColor(t.type.name)"
+                              >{{ t.type.name }}</span>
+                            }
+                          </div>
+                        }
                       </div>
                       <svg class="h-4 w-4 text-neutral-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                         <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -304,7 +398,6 @@ type PageSize = (typeof PAGE_SIZES)[number];
             <!-- Sticky paginator footer -->
             <div class="shrink-0 border-t border-neutral-800 bg-surface-800 px-4 py-3">
               <div class="flex flex-wrap items-center justify-between gap-3">
-                <!-- Showing X–Y of Z -->
                 <p class="text-xs text-neutral-500 hidden sm:block">
                   {{ 'paginator.showing' | translate : ts.currentLanguage() }}
                   <span class="text-neutral-300 font-medium">{{ showingFrom() }}</span>
@@ -314,7 +407,6 @@ type PageSize = (typeof PAGE_SIZES)[number];
                   <span class="text-neutral-300 font-medium">{{ totalCount() }}</span>
                 </p>
 
-                <!-- Page info + buttons -->
                 <div class="flex items-center gap-3 ml-auto">
                   <span class="text-xs text-neutral-400">
                     {{ 'paginator.page' | translate : ts.currentLanguage() }}
@@ -377,6 +469,36 @@ export class DataExplorer {
   protected readonly listResource = httpResource<PokemonListResponse>(
     () => this.svc.listUrl(this.pageSize(), this.offset()),
   );
+
+  private readonly pageNames = computed(() => {
+    const items = this.listResource.value()?.results;
+    if (!items || items.length === 0) return '';
+    return items.map(i => i.name).join(',');
+  });
+
+  protected readonly detailsResource = resource<Map<string, Pokemon>, string>({
+    params: () => this.pageNames(),
+    loader: async ({ params, abortSignal }) => {
+      const key = params;
+      if (!key) return new Map<string, Pokemon>();
+      const items = this.listResource.value()?.results ?? [];
+      const details = await Promise.all(
+        items.map(item =>
+          fetch(this.svc.detailUrl(item.name), { signal: abortSignal })
+            .then(r => r.json() as Promise<Pokemon>)
+        )
+      );
+      const map = new Map<string, Pokemon>();
+      for (const p of details) {
+        map.set(p.name, p);
+      }
+      return map;
+    },
+  });
+
+  protected getDetail(name: string): Pokemon | undefined {
+    return this.detailsResource.value()?.get(name);
+  }
 
   protected readonly totalCount  = computed(() => this.listResource.value()?.count ?? 0);
   protected readonly totalPages  = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize())));

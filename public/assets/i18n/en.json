@@ -87,8 +87,16 @@
       "image": "Image",
       "name": "Name",
       "types": "Types",
+      "height": "Height",
+      "weight": "Weight",
       "action": "Detail"
     }
+  },
+  "pokemon": {
+    "height": "Height",
+    "weight": "Weight",
+    "baseExp": "Base Exp",
+    "baseStats": "Base Stats"
   },
   "dashboard": {
     "title": "Angular 22 Showcase",

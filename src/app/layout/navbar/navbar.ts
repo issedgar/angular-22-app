@@ -28,7 +28,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
   selector: 'app-navbar',
   imports: [TranslatePipe],
   template: `
-    <header class="h-16 flex items-center px-4 gap-3 bg-surface-800/80 backdrop-blur-sm border-b border-neutral-800 shrink-0 z-30">
+    <header class="h-16 flex items-center px-4 gap-3 bg-surface-800/80 backdrop-blur-sm border-b border-neutral-800 shrink-0 z-[60] shadow-card">
       <!-- Mobile hamburger -->
       <button
         class="lg:hidden p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
@@ -65,7 +65,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
       <div class="flex-1"></div>
 
       <!-- Primary color picker -->
-      <div class="relative hidden sm:flex items-center">
+      <div class="relative flex items-center">
         <button
           (click)="toggleColorPicker()"
           class="p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
@@ -79,7 +79,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
           <!-- Backdrop -->
           <div class="fixed inset-0 z-40" (click)="colorPickerOpen.set(false)"></div>
           <!-- Popover -->
-          <div class="absolute right-0 top-full mt-2 z-50 rounded-xl border border-neutral-700 bg-surface-800 shadow-xl p-3 min-w-44">
+          <div class="color-picker-popover absolute right-0 top-full mt-2 z-50 rounded-xl border border-neutral-700 bg-surface-800 shadow-elevated p-3 min-w-44">
             <p class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2 px-1">
               {{ 'theme.primary' | translate : ts.currentLanguage() }}
             </p>

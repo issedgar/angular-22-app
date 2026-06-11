@@ -125,9 +125,9 @@ const NAV_GROUPS: NavGroup[] = [
 ];
 
 const BADGE_CLASSES: Record<NavItem['badge'], string> = {
-  stable: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
-  new: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
-  experimental: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+  stable: 'badge-stable bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
+  new: 'badge-new bg-blue-500/10 text-blue-400 border border-blue-500/20',
+  experimental: 'badge-experimental bg-amber-500/10 text-amber-400 border border-amber-500/20',
 };
 
 const BADGE_KEY: Record<NavItem['badge'], string> = {
@@ -237,7 +237,7 @@ export class Sidebar {
     const collapsed = this.layout.sidebarCollapsed();
     const mobileOpen = this.layout.mobileSidebarOpen();
     return [
-      'flex flex-col bg-surface-800 border-r border-neutral-800 overflow-y-auto',
+      'app-sidebar flex flex-col bg-surface-800 border-r border-neutral-800 overflow-y-auto',
       'transition-all duration-200',
       'lg:relative lg:flex-shrink-0',
       collapsed ? 'lg:w-16' : 'lg:w-60',

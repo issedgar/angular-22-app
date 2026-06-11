@@ -11,7 +11,7 @@ import { Pokemon } from '../../../core/models/pokemon.model';
   selector: 'app-pokemon-detail',
   imports: [RouterLink, TranslatePipe],
   template: `
-    <div class="max-w-3xl space-y-6">
+    <div class="max-w-3xl mx-auto space-y-6">
 
       <!-- Back link -->
       <a
@@ -26,10 +26,10 @@ import { Pokemon } from '../../../core/models/pokemon.model';
 
       @if (pokemon.isLoading()) {
         <!-- Skeleton -->
-        <div class="animate-pulse space-y-4">
+          <div class="animate-pulse space-y-4">
           <div class="h-8 w-48 rounded-lg bg-surface-700"></div>
           <div class="flex gap-6">
-            <div class="h-40 w-40 rounded-xl bg-surface-700"></div>
+            <div class="h-56 w-56 rounded-xl bg-surface-700"></div>
             <div class="flex-1 space-y-3 pt-2">
               <div class="h-5 w-32 rounded bg-surface-700"></div>
               <div class="h-4 w-24 rounded bg-surface-700"></div>
@@ -58,7 +58,7 @@ import { Pokemon } from '../../../core/models/pokemon.model';
         </div>
       } @else if (pokemon.hasValue()) {
         <!-- Pokemon card -->
-        <div class="overflow-hidden rounded-2xl border border-neutral-800 bg-surface-800">
+        <div class="overflow-hidden rounded-2xl border border-neutral-800 bg-surface-800 shadow-card">
 
           <!-- Header with gradient background -->
           <div
@@ -70,7 +70,7 @@ import { Pokemon } from '../../../core/models/pokemon.model';
               <img
                 [src]="artworkUrl()"
                 [alt]="svc.capitalize(pokemon.value()!.name)"
-                class="h-40 w-40 object-contain drop-shadow-lg"
+                class="h-56 w-56 object-contain drop-shadow-lg"
                 loading="eager"
               />
             </div>
@@ -94,16 +94,16 @@ import { Pokemon } from '../../../core/models/pokemon.model';
               <!-- Physical info -->
               <div class="flex gap-6 text-sm text-white/60">
                 <div>
-                  <span class="text-white/40 text-xs uppercase tracking-wider">Height</span>
+                  <span class="text-white/40 text-xs uppercase tracking-wider">{{ 'pokemon.height' | translate : ts.currentLanguage() }}</span>
                   <p class="font-semibold text-white/80">{{ (pokemon.value()!.height / 10).toFixed(1) }} m</p>
                 </div>
                 <div>
-                  <span class="text-white/40 text-xs uppercase tracking-wider">Weight</span>
+                  <span class="text-white/40 text-xs uppercase tracking-wider">{{ 'pokemon.weight' | translate : ts.currentLanguage() }}</span>
                   <p class="font-semibold text-white/80">{{ (pokemon.value()!.weight / 10).toFixed(1) }} kg</p>
                 </div>
                 @if (pokemon.value()!.base_experience) {
                   <div>
-                    <span class="text-white/40 text-xs uppercase tracking-wider">Base Exp</span>
+                    <span class="text-white/40 text-xs uppercase tracking-wider">{{ 'pokemon.baseExp' | translate : ts.currentLanguage() }}</span>
                     <p class="font-semibold text-white/80">{{ pokemon.value()!.base_experience }}</p>
                   </div>
                 }
@@ -114,7 +114,7 @@ import { Pokemon } from '../../../core/models/pokemon.model';
           <!-- Base stats -->
           <div class="p-6 sm:p-8 border-t border-neutral-800">
             <h2 class="mb-4 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-              Base Stats
+              {{ 'pokemon.baseStats' | translate : ts.currentLanguage() }}
             </h2>
             <div class="space-y-3">
               @for (stat of pokemon.value()!.stats; track stat.stat.name) {

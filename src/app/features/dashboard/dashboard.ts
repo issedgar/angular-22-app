@@ -103,9 +103,9 @@ const FEATURES: Feature[] = [
 ];
 
 const BADGE_CLASSES: Record<BadgeType, string> = {
-  stable: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
-  new: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
-  experimental: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+  stable: 'badge-stable bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
+  new: 'badge-new bg-blue-500/10 text-blue-400 border border-blue-500/20',
+  experimental: 'badge-experimental bg-amber-500/10 text-amber-400 border border-amber-500/20',
 };
 
 const FILTER_OPTIONS: BadgeFilter[] = ['all', 'stable', 'new', 'experimental'];
@@ -125,7 +125,7 @@ const STATS: Stat[] = [
 
       <!-- ── Hero ────────────────────────────────────────────── -->
       <section
-        class="relative overflow-hidden rounded-2xl border border-neutral-800 bg-gradient-to-br from-surface-700 to-surface-900 p-8 lg:p-10"
+        class="hero-gradient relative overflow-hidden rounded-2xl border border-neutral-800 bg-gradient-to-br from-surface-700 to-surface-900 p-8 lg:p-10 shadow-card"
         aria-labelledby="hero-title"
       >
         <!-- Background glows -->
@@ -175,7 +175,7 @@ const STATS: Stat[] = [
       <!-- ── Stats row ─────────────────────────────────────── -->
       <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
         @for (stat of stats; track stat.value) {
-          <div class="relative overflow-hidden rounded-xl border border-neutral-800 bg-surface-800 px-5 py-4">
+          <div class="relative overflow-hidden rounded-xl border border-neutral-800 bg-surface-800 px-5 py-4 shadow-card">
             <div class="relative z-10">
               <p class="text-2xl font-bold text-neutral-100">{{ stat.value }}</p>
               <p class="mt-0.5 text-sm text-neutral-500">
@@ -234,10 +234,11 @@ const STATS: Stat[] = [
 
       <!-- ── Feature cards grid ────────────────────────────── -->
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        @for (feature of filteredFeatures(); track feature.route) {
+        @for (feature of filteredFeatures(); track feature.route; let i = $index) {
           <a
             [routerLink]="feature.route"
-            class="group flex flex-col gap-4 rounded-xl border border-neutral-800 bg-surface-800 p-5 no-underline transition-all duration-200 hover:border-neutral-700 hover:bg-surface-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red"
+            class="stagger-item group flex flex-col gap-4 rounded-xl border border-neutral-800 bg-surface-800 p-5 no-underline transition-all duration-200 hover:border-neutral-700 hover:bg-surface-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red shadow-card"
+            [style.animation-delay.ms]="i * 50"
           >
             <!-- Icon + badge -->
             <div class="flex items-start justify-between">

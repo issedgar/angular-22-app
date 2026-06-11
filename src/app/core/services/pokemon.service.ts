@@ -74,6 +74,10 @@ export class PokemonService {
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
   }
 
+  artworkUrl(id: number): string {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+  }
+
   capitalize(name: string): string {
     return name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
