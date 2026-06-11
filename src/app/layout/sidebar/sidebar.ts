@@ -176,12 +176,12 @@ const BADGE_KEY: Record<NavItem['badge'], string> = {
               [routerLink]="item.route"
               routerLinkActive="bg-angular-red/10 text-neutral-100 border-l-2 border-angular-red"
               [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
-              class="flex items-center gap-3 mx-2 px-3 py-2.5 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/60 transition-colors duration-150 border-l-2 border-transparent no-underline cursor-pointer"
+              class="flex items-start gap-3 mx-2 px-3 py-2.5 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/60 transition-colors duration-150 border-l-2 border-transparent no-underline cursor-pointer"
               [title]="layout.sidebarCollapsed() ? (item.labelKey | translate : ts.currentLanguage()) : ''"
               (click)="handleNavClick()"
             >
               <svg
-                class="w-5 h-5 shrink-0"
+                class="w-5 h-5 shrink-0 mt-0.5"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -192,11 +192,13 @@ const BADGE_KEY: Record<NavItem['badge'], string> = {
               </svg>
 
               @if (!layout.sidebarCollapsed()) {
-                <span class="flex-1 text-sm font-medium truncate">
-                  {{ item.labelKey | translate : ts.currentLanguage() }}
-                </span>
-                <span class="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded {{ badgeClasses(item.badge) }}">
-                  {{ badgeKey(item.badge) | translate : ts.currentLanguage() }}
+                <span class="flex-1 min-w-0 flex flex-col gap-0.5">
+                  <span class="text-sm font-medium leading-snug break-words">
+                    {{ item.labelKey | translate : ts.currentLanguage() }}
+                  </span>
+                  <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded self-start {{ badgeClasses(item.badge) }}">
+                    {{ badgeKey(item.badge) | translate : ts.currentLanguage() }}
+                  </span>
                 </span>
               }
             </a>

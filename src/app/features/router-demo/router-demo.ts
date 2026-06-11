@@ -7,7 +7,7 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-router-demo',
@@ -234,8 +234,11 @@ export class RouterDemo {
   });
 
   constructor() {
-    const sub = this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
+    this.router.events
+      .pipe(
+        filter(e => e instanceof NavigationEnd),
+        takeUntilDestroyed(),
+      )
       .subscribe(e => {
         const end = e as NavigationEnd;
         const now = new Date().toLocaleTimeString('en', { hour12: false });
@@ -244,8 +247,6 @@ export class RouterDemo {
           ...log.slice(0, 19),
         ]);
       });
-
-    inject({ ngOnDestroy: () => sub.unsubscribe() } as never);
   }
 
   protected tryProtectedRoute(): void {

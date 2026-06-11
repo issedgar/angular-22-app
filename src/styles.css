@@ -4,6 +4,10 @@
   --color-angular-red: #dd0031;
   --color-angular-dark-red: #c3002f;
 
+  /* Danger is always red — independent of primary color */
+  --color-danger: #ef4444;
+  --color-danger-soft: #fca5a5;
+
   --color-surface-950: #070707;
   --color-surface-900: #0f0f0f;
   --color-surface-800: #171717;
@@ -31,6 +35,35 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Light theme overrides ─────────────────────────────────────────────────── */
+[data-theme="light"] {
+  /* Surface palette — light grays */
+  --color-surface-950: #e2e8f0;
+  --color-surface-900: #f8fafc;
+  --color-surface-800: #ffffff;
+  --color-surface-700: #f1f5f9;
+  --color-surface-600: #e2e8f0;
+  --color-surface-500: #cbd5e1;
+  --color-surface-400: #94a3b8;
+
+  /* Invert the neutral text scale so dark-mode classes work in light mode */
+  --color-neutral-50:  #0f172a;
+  --color-neutral-100: #1e293b;
+  --color-neutral-200: #334155;
+  --color-neutral-300: #475569;
+  --color-neutral-400: #64748b;
+  --color-neutral-500: #94a3b8;
+  --color-neutral-600: #cbd5e1;
+  --color-neutral-700: #e2e8f0;
+  --color-neutral-800: #f1f5f9;
+  --color-neutral-900: #f8fafc;
+
+  color-scheme: light;
+  background-color: var(--color-surface-900);
+  color: var(--color-neutral-100);
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;

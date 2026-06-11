@@ -3,6 +3,7 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 
 import { TranslationService } from './core/i18n/translation.service';
+import { AppearanceService } from './core/services/appearance.service';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -14,7 +15,11 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: () => {
         const ts = inject(TranslationService);
-        return () => ts.initialize();
+        const appearance = inject(AppearanceService);
+        return async () => {
+          appearance.initialize();
+          await ts.initialize();
+        };
       },
       multi: true,
     },

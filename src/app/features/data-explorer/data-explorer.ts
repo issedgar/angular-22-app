@@ -7,16 +7,17 @@ import { TranslatePipe } from '../../core/i18n/translation.pipe';
 import { PokemonService } from '../../core/services/pokemon.service';
 import { PokemonListResponse, Pokemon } from '../../core/models/pokemon.model';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZES = [10, 20, 25, 50] as const;
+type PageSize = (typeof PAGE_SIZES)[number];
 
 @Component({
   selector: 'app-data-explorer',
   imports: [RouterLink, TranslatePipe],
   template: `
-    <div class="max-w-5xl space-y-6">
+    <div class="flex flex-col gap-4" style="min-height: 0">
 
-      <!-- Header -->
-      <div>
+      <!-- Section header -->
+      <div class="shrink-0">
         <h1 class="text-2xl font-bold text-neutral-100">
           {{ 'nav.dataExplorer' | translate : ts.currentLanguage() }}
         </h1>
@@ -25,17 +26,18 @@ const PAGE_SIZE = 20;
         </p>
       </div>
 
-      <!-- Search row -->
-      <div class="flex flex-wrap items-center gap-3">
-        <div class="relative flex-1 min-w-48">
+      <!-- Toolbar -->
+      <div class="shrink-0 flex flex-wrap items-center gap-3">
+        <!-- Search -->
+        <div class="relative flex-1 min-w-56">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
             <path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <input
-            type="text"
+            type="search"
             [value]="searchInput()"
-            (input)="searchInput.set($any($event.target).value)"
-            [placeholder]="('common.search' | translate : ts.currentLanguage()) + '...'"
+            (input)="onSearchInput($any($event.target).value)"
+            [placeholder]="'dataExplorer.searchPlaceholder' | translate : ts.currentLanguage()"
             class="w-full rounded-lg border border-neutral-700 bg-surface-800 py-2 pl-9 pr-9 text-sm text-neutral-100 placeholder-neutral-500 focus:border-angular-red/50 focus:outline-none focus:ring-1 focus:ring-angular-red/30 transition-colors"
             [attr.aria-label]="'common.search' | translate : ts.currentLanguage()"
           />
@@ -46,190 +48,356 @@ const PAGE_SIZE = 20;
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
               </svg>
             </div>
+          } @else if (searchInput()) {
+            <button
+              (click)="clearSearch()"
+              type="button"
+              class="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded text-neutral-500 hover:text-neutral-200 transition-colors"
+              [attr.aria-label]="'common.clearSearch' | translate : ts.currentLanguage()"
+            >
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
           }
         </div>
-        @if (searchInput()) {
+
+        <!-- Page size selector -->
+        @if (!isSearchActive()) {
+          <div class="flex items-center gap-2 shrink-0">
+            <label class="text-xs text-neutral-500 hidden sm:inline whitespace-nowrap">
+              {{ 'paginator.rowsPerPage' | translate : ts.currentLanguage() }}
+            </label>
+            <select
+              [value]="pageSize()"
+              (change)="setPageSize(+$any($event.target).value)"
+              class="rounded-lg border border-neutral-700 bg-surface-800 py-2 pl-3 pr-7 text-sm text-neutral-300 focus:border-angular-red/50 focus:outline-none focus:ring-1 focus:ring-angular-red/30 transition-colors appearance-none"
+            >
+              @for (size of pageSizes; track size) {
+                <option [value]="size">{{ size }}</option>
+              }
+            </select>
+          </div>
+        }
+
+        <!-- Refresh -->
+        @if (!isSearchActive()) {
           <button
-            (click)="clearSearch()"
+            (click)="listResource.reload()"
             type="button"
-            class="rounded-lg border border-neutral-700 bg-surface-800 px-3 py-2 text-sm text-neutral-400 hover:text-neutral-100 transition-colors"
+            class="shrink-0 p-2 rounded-lg border border-neutral-700 text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
+            [attr.aria-label]="'common.retry' | translate : ts.currentLanguage()"
           >
-            {{ 'common.close' | translate : ts.currentLanguage() }}
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </button>
+        }
+
+        <!-- Total count -->
+        @if (!isSearchActive() && totalCount() > 0) {
+          <span class="text-xs text-neutral-500 hidden md:inline shrink-0">
+            {{ totalCount() }} {{ 'paginator.total' | translate : ts.currentLanguage() }}
+          </span>
         }
       </div>
 
-      <!-- Search result panel -->
-      @if (isSearchActive()) {
-        <div class="rounded-xl border border-neutral-800 bg-surface-800">
-          @if (searchResource.isLoading()) {
-            <div class="flex items-center justify-center gap-3 py-10 text-neutral-500">
-              <svg class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-              </svg>
-              <span class="text-sm">{{ 'common.loading' | translate : ts.currentLanguage() }}</span>
-            </div>
-          } @else if (searchResource.error()) {
-            <div class="px-6 py-10 text-center">
-              <p class="text-sm text-neutral-400">
-                {{ 'common.empty' | translate : ts.currentLanguage() }} —
-                <span class="font-mono text-angular-red">"{{ debouncedSearch.value() }}"</span>
-              </p>
-            </div>
-          } @else if (searchResource.hasValue()) {
-            <div class="flex flex-wrap items-center gap-5 p-5">
-              <img
-                [src]="svc.spriteUrl(searchResource.value()!.id)"
-                [alt]="svc.capitalize(searchResource.value()!.name)"
-                class="h-20 w-20 shrink-0 object-contain"
-                loading="lazy"
-              />
-              <div class="flex-1 min-w-0">
-                <div class="flex flex-wrap items-center gap-3 mb-3">
-                  <span class="font-mono text-xs text-neutral-500">
-                    #{{ searchResource.value()!.id.toString().padStart(4, '0') }}
-                  </span>
-                  <h2 class="text-base font-semibold text-neutral-100">
-                    {{ svc.capitalize(searchResource.value()!.name) }}
-                  </h2>
-                  <div class="flex gap-1">
-                    @for (t of searchResource.value()!.types; track t.type.name) {
-                      <span
-                        class="rounded px-2 py-0.5 text-[10px] font-bold uppercase text-white"
-                        [style.background]="svc.typeColor(t.type.name)"
-                      >{{ t.type.name }}</span>
-                    }
+      <!-- Search hint -->
+      @if (!isSearchActive()) {
+        <p class="shrink-0 text-xs text-neutral-600">
+          {{ 'dataExplorer.searchHelper' | translate : ts.currentLanguage() }}
+        </p>
+      }
+
+      <!-- Main table panel: max-height keeps paginator always visible without full-page scroll -->
+      <div class="flex flex-col rounded-xl border border-neutral-800 bg-surface-800 overflow-hidden" style="height: calc(100vh - 260px); min-height: 420px">
+
+        <!-- Search result panel -->
+        @if (isSearchActive()) {
+          <div class="overflow-auto flex-1">
+            @if (searchResource.isLoading()) {
+              <div class="flex items-center justify-center gap-3 py-16 text-neutral-500">
+                <svg class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                </svg>
+                <span class="text-sm">{{ 'common.loading' | translate : ts.currentLanguage() }}</span>
+              </div>
+            } @else if (searchResource.error()) {
+              <div class="flex flex-col items-center justify-center gap-4 py-16">
+                <svg class="h-10 w-10 text-neutral-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.166 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="text-center">
+                  <p class="text-sm font-medium text-neutral-300">
+                    {{ 'dataExplorer.noResultsFor' | translate : ts.currentLanguage() }}
+                    <span class="font-mono text-angular-red">"{{ debouncedSearch.value() }}"</span>
+                  </p>
+                  <p class="text-xs text-neutral-600 mt-1">
+                    {{ 'dataExplorer.searchHelper' | translate : ts.currentLanguage() }}
+                  </p>
+                </div>
+                <button
+                  (click)="clearSearch()"
+                  type="button"
+                  class="rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-400 hover:text-neutral-100 transition-colors"
+                >
+                  {{ 'common.clearSearch' | translate : ts.currentLanguage() }}
+                </button>
+              </div>
+            } @else if (searchResource.hasValue()) {
+              <!-- Single search result -->
+              <div class="flex flex-col sm:flex-row items-start gap-6 p-6">
+                <div class="mx-auto sm:mx-0">
+                  <div class="rounded-xl bg-surface-700 p-3 w-32 h-32 flex items-center justify-center">
+                    <img
+                      [src]="svc.spriteUrl(searchResource.value()!.id)"
+                      [alt]="svc.capitalize(searchResource.value()!.name)"
+                      class="w-24 h-24 object-contain"
+                      loading="lazy"
+                    />
                   </div>
                 </div>
-                <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                  @for (stat of searchResource.value()!.stats; track stat.stat.name) {
-                    <div>
-                      <p class="text-[10px] text-neutral-500 mb-0.5">{{ svc.statLabel(stat.stat.name) }}</p>
-                      <p class="text-sm font-bold text-neutral-200">{{ stat.base_stat }}</p>
+                <div class="flex-1 min-w-0 space-y-4">
+                  <div>
+                    <div class="flex flex-wrap items-center gap-3">
+                      <span class="font-mono text-xs text-neutral-500">
+                        #{{ searchResource.value()!.id.toString().padStart(4, '0') }}
+                      </span>
+                      <h2 class="text-xl font-bold text-neutral-100">
+                        {{ svc.capitalize(searchResource.value()!.name) }}
+                      </h2>
                     </div>
-                  }
+                    <div class="flex flex-wrap gap-1.5 mt-2">
+                      @for (t of searchResource.value()!.types; track t.type.name) {
+                        <span
+                          class="rounded-md px-2.5 py-0.5 text-xs font-bold uppercase text-white"
+                          [style.background]="svc.typeColor(t.type.name)"
+                        >{{ t.type.name }}</span>
+                      }
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                    @for (stat of searchResource.value()!.stats; track stat.stat.name) {
+                      <div class="rounded-lg bg-surface-700 px-2.5 py-2 text-center">
+                        <p class="text-[10px] text-neutral-500 mb-0.5 uppercase tracking-wider">{{ svc.statLabel(stat.stat.name) }}</p>
+                        <p class="text-base font-bold text-neutral-200">{{ stat.base_stat }}</p>
+                        <div class="mt-1 h-1 rounded-full bg-surface-600">
+                          <div
+                            class="h-1 rounded-full bg-angular-red transition-all"
+                            [style.width.%]="svc.statPercent(stat.base_stat, stat.stat.name)"
+                          ></div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <a
+                    [routerLink]="['/data-explorer', searchResource.value()!.name]"
+                    class="inline-flex items-center gap-2 rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red transition-colors no-underline"
+                  >
+                    {{ 'common.learnMore' | translate : ts.currentLanguage() }}
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
                 </div>
               </div>
-              <a
-                [routerLink]="['/data-explorer', searchResource.value()!.name]"
-                class="shrink-0 rounded-lg bg-angular-red px-4 py-2 text-xs font-semibold text-white hover:bg-angular-dark-red transition-colors"
-              >
-                {{ 'common.learnMore' | translate : ts.currentLanguage() }} →
-              </a>
-            </div>
-          }
-        </div>
-      }
-
-      <!-- Pokémon list table -->
-      @if (!isSearchActive()) {
-        <div class="overflow-hidden rounded-xl border border-neutral-800 bg-surface-800">
-          <div class="grid grid-cols-[3.5rem_3.5rem_1fr_1.5rem] items-center gap-4 border-b border-neutral-800 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-neutral-600">
-            <span>#</span>
-            <span></span>
-            <span>Name</span>
-            <span></span>
-          </div>
-
-          @if (listResource.isLoading()) {
-            <div class="flex items-center justify-center gap-3 py-12 text-neutral-500">
-              <svg class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-              </svg>
-              <span class="text-sm">{{ 'common.loading' | translate : ts.currentLanguage() }}</span>
-            </div>
-          } @else if (listResource.error()) {
-            <div class="px-6 py-12 text-center">
-              <p class="mb-3 text-sm text-neutral-400">{{ 'common.error' | translate : ts.currentLanguage() }}</p>
-              <button
-                (click)="listResource.reload()"
-                type="button"
-                class="rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red transition-colors"
-              >
-                {{ 'common.retry' | translate : ts.currentLanguage() }}
-              </button>
-            </div>
-          } @else {
-            @for (item of listResource.value()?.results ?? []; track item.name) {
-              <a
-                [routerLink]="['/data-explorer', item.name]"
-                class="grid grid-cols-[3.5rem_3.5rem_1fr_1.5rem] items-center gap-4 border-b border-neutral-800/50 px-4 py-2.5 no-underline text-neutral-400 hover:bg-surface-700 hover:text-neutral-100 transition-colors last:border-0"
-              >
-                <span class="font-mono text-xs text-neutral-600">
-                  {{ svc.extractId(item.url).toString().padStart(4, '0') }}
-                </span>
-                <img
-                  [src]="svc.spriteUrl(svc.extractId(item.url))"
-                  [alt]="svc.capitalize(item.name)"
-                  class="h-10 w-10 object-contain"
-                  loading="lazy"
-                />
-                <span class="text-sm font-medium">{{ svc.capitalize(item.name) }}</span>
-                <svg class="h-4 w-4 text-neutral-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </a>
             }
-          }
-        </div>
-
-        <!-- Pagination -->
-        <div class="flex items-center justify-between">
-          <span class="text-sm text-neutral-500">
-            {{ ts.currentLanguage() === 'es' ? 'Página' : 'Page' }}
-            <span class="text-neutral-300 font-medium">{{ currentPage() }}</span>
-            / {{ totalPages() }}
-            <span class="text-neutral-600 text-xs ml-1">({{ totalCount() }} total)</span>
-          </span>
-          <div class="flex items-center gap-2">
-            <button
-              (click)="prevPage()"
-              [disabled]="currentPage() <= 1"
-              type="button"
-              class="rounded-lg border border-neutral-700 px-4 py-1.5 text-sm text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-800 enabled:hover:text-neutral-100"
-            >← Prev</button>
-            <button
-              (click)="nextPage()"
-              [disabled]="currentPage() >= totalPages()"
-              type="button"
-              class="rounded-lg border border-neutral-700 px-4 py-1.5 text-sm text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-800 enabled:hover:text-neutral-100"
-            >Next →</button>
           </div>
-        </div>
-      }
 
+        } @else {
+          <!-- Pokemon list table -->
+          <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Sticky table header -->
+            <div class="shrink-0 hidden md:grid md:grid-cols-[4rem_4.5rem_10rem_1fr_auto] items-center gap-4 border-b border-neutral-800 px-4 py-2.5 bg-surface-800">
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
+                {{ 'dataExplorer.col.id' | translate : ts.currentLanguage() }}
+              </span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
+                {{ 'dataExplorer.col.image' | translate : ts.currentLanguage() }}
+              </span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
+                {{ 'dataExplorer.col.name' | translate : ts.currentLanguage() }}
+              </span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600">URL</span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-neutral-600 flex justify-end pr-1">
+                {{ 'dataExplorer.col.action' | translate : ts.currentLanguage() }}
+              </span>
+            </div>
+
+            <!-- Scrollable body -->
+            <div class="flex-1 overflow-y-auto">
+              @if (listResource.isLoading()) {
+                <div class="flex items-center justify-center gap-3 py-16 text-neutral-500">
+                  <svg class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  </svg>
+                  <span class="text-sm">{{ 'common.loading' | translate : ts.currentLanguage() }}</span>
+                </div>
+              } @else if (listResource.error()) {
+                <div class="flex flex-col items-center justify-center gap-4 py-16">
+                  <p class="text-sm text-neutral-400">{{ 'common.error' | translate : ts.currentLanguage() }}</p>
+                  <button
+                    (click)="listResource.reload()"
+                    type="button"
+                    class="rounded-lg bg-angular-red px-4 py-2 text-sm font-semibold text-white hover:bg-angular-dark-red transition-colors"
+                  >
+                    {{ 'common.retry' | translate : ts.currentLanguage() }}
+                  </button>
+                </div>
+              } @else {
+                @for (item of listResource.value()?.results ?? []; track item.name; let even = $even) {
+                  <a
+                    [routerLink]="['/data-explorer', item.name]"
+                    class="no-underline text-neutral-400 border-b border-neutral-800/50 last:border-0 hover:bg-surface-700 hover:text-neutral-100 transition-colors focus:outline-none focus:bg-surface-700 focus:text-neutral-100"
+                    [class.bg-surface-800]="even"
+                  >
+                    <!-- Desktop row -->
+                    <div class="hidden md:grid md:grid-cols-[4rem_4.5rem_10rem_1fr_auto] items-center gap-4 px-4 py-3">
+                      <span class="font-mono text-xs text-neutral-500">
+                        #{{ svc.extractId(item.url).toString().padStart(4, '0') }}
+                      </span>
+                      <div class="flex items-center justify-center h-14 w-14 rounded-lg bg-surface-700/50">
+                        <img
+                          [src]="svc.spriteUrl(svc.extractId(item.url))"
+                          [alt]="svc.capitalize(item.name)"
+                          class="h-12 w-12 object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                      <span class="text-sm font-semibold text-neutral-200">{{ svc.capitalize(item.name) }}</span>
+                      <span class="text-xs text-neutral-600 font-mono truncate">{{ item.url }}</span>
+                      <div class="flex justify-end pr-1">
+                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-700 text-neutral-500 transition-colors" [attr.aria-label]="'dataExplorer.col.action' | translate : ts.currentLanguage()">
+                          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Mobile card -->
+                    <div class="flex md:hidden items-center gap-3 px-4 py-3">
+                      <div class="h-14 w-14 shrink-0 rounded-lg bg-surface-700/50 flex items-center justify-center">
+                        <img
+                          [src]="svc.spriteUrl(svc.extractId(item.url))"
+                          [alt]="svc.capitalize(item.name)"
+                          class="h-12 w-12 object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-neutral-200">{{ svc.capitalize(item.name) }}</p>
+                        <p class="text-xs font-mono text-neutral-500">#{{ svc.extractId(item.url).toString().padStart(4, '0') }}</p>
+                      </div>
+                      <svg class="h-4 w-4 text-neutral-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                  </a>
+                }
+              }
+            </div>
+
+            <!-- Sticky paginator footer -->
+            <div class="shrink-0 border-t border-neutral-800 bg-surface-800 px-4 py-3">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <!-- Showing X–Y of Z -->
+                <p class="text-xs text-neutral-500 hidden sm:block">
+                  {{ 'paginator.showing' | translate : ts.currentLanguage() }}
+                  <span class="text-neutral-300 font-medium">{{ showingFrom() }}</span>
+                  {{ 'paginator.to' | translate : ts.currentLanguage() }}
+                  <span class="text-neutral-300 font-medium">{{ showingTo() }}</span>
+                  {{ 'paginator.of' | translate : ts.currentLanguage() }}
+                  <span class="text-neutral-300 font-medium">{{ totalCount() }}</span>
+                </p>
+
+                <!-- Page info + buttons -->
+                <div class="flex items-center gap-3 ml-auto">
+                  <span class="text-xs text-neutral-400">
+                    {{ 'paginator.page' | translate : ts.currentLanguage() }}
+                    <span class="font-medium text-neutral-200 mx-1">{{ currentPage() }}</span>
+                    {{ 'paginator.of' | translate : ts.currentLanguage() }}
+                    <span class="font-medium text-neutral-200 ml-1">{{ totalPages() }}</span>
+                  </span>
+                  <div class="flex items-center gap-1">
+                    <button
+                      (click)="prevPage()"
+                      [disabled]="currentPage() <= 1"
+                      type="button"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-700 enabled:hover:text-neutral-100"
+                    >
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span class="hidden sm:inline">{{ 'paginator.prev' | translate : ts.currentLanguage() }}</span>
+                    </button>
+                    <button
+                      (click)="nextPage()"
+                      [disabled]="currentPage() >= totalPages()"
+                      type="button"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed enabled:hover:bg-neutral-700 enabled:hover:text-neutral-100"
+                    >
+                      <span class="hidden sm:inline">{{ 'paginator.next' | translate : ts.currentLanguage() }}</span>
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
     </div>
   `,
 })
 export class DataExplorer {
-  protected readonly ts = inject(TranslationService);
+  protected readonly ts  = inject(TranslationService);
   protected readonly svc = inject(PokemonService);
 
+  protected readonly pageSizes = PAGE_SIZES;
   protected readonly searchInput = signal('');
-
-  // debounced() is EXPERIMENTAL — wraps a signal with a delay before propagating changes
   protected readonly debouncedSearch = debounced(this.searchInput, 400);
-
   protected readonly isSearchActive = computed(() => !!this.debouncedSearch.value()?.trim());
 
-  // httpResource fires only when URL is non-undefined; idle when search is empty
+  protected readonly page     = signal(1);
+  protected readonly pageSize = signal<PageSize>(20);
+
+  private readonly offset = computed(() => (this.page() - 1) * this.pageSize());
+
   protected readonly searchResource = httpResource<Pokemon>(() => {
     const term = this.debouncedSearch.value()?.trim();
     return term ? this.svc.detailUrl(term) : undefined;
   });
 
-  protected readonly page = signal(1);
-  private readonly offset = computed(() => (this.page() - 1) * PAGE_SIZE);
-
   protected readonly listResource = httpResource<PokemonListResponse>(
-    () => this.svc.listUrl(PAGE_SIZE, this.offset()),
+    () => this.svc.listUrl(this.pageSize(), this.offset()),
   );
 
-  protected readonly totalCount = computed(() => this.listResource.value()?.count ?? 0);
-  protected readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / PAGE_SIZE)));
+  protected readonly totalCount  = computed(() => this.listResource.value()?.count ?? 0);
+  protected readonly totalPages  = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize())));
   protected readonly currentPage = this.page.asReadonly();
+
+  protected readonly showingFrom = computed(() =>
+    this.totalCount() === 0 ? 0 : this.offset() + 1
+  );
+  protected readonly showingTo = computed(() =>
+    Math.min(this.offset() + this.pageSize(), this.totalCount())
+  );
+
+  protected onSearchInput(value: string): void {
+    this.searchInput.set(value);
+    this.page.set(1);
+  }
+
+  protected clearSearch(): void {
+    this.searchInput.set('');
+    this.page.set(1);
+  }
 
   protected prevPage(): void {
     if (this.page() > 1) this.page.update(p => p - 1);
@@ -239,7 +407,10 @@ export class DataExplorer {
     if (this.page() < this.totalPages()) this.page.update(p => p + 1);
   }
 
-  protected clearSearch(): void {
-    this.searchInput.set('');
+  protected setPageSize(size: number): void {
+    if (PAGE_SIZES.includes(size as PageSize)) {
+      this.pageSize.set(size as PageSize);
+      this.page.set(1);
+    }
   }
 }

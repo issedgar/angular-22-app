@@ -39,19 +39,56 @@
     "collapseSidebar": "Collapse sidebar"
   },
   "common": {
-    "loading": "Loading...",
+    "loading": "Loading…",
     "error": "Something went wrong",
     "retry": "Retry",
     "empty": "No results found",
+    "noResultsFor": "No results for",
     "search": "Search",
     "back": "Back",
     "close": "Close",
+    "clearSearch": "Clear search",
     "copy": "Copy",
     "copied": "Copied!",
     "showCode": "Show code",
     "hideCode": "Hide code",
     "learnMore": "Learn more",
     "viewDocs": "View docs"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light",
+    "toggle": "Toggle theme",
+    "current": "Current theme",
+    "primary": "Primary color",
+    "colorAngularRed": "Angular Red",
+    "colorBlue": "Blue",
+    "colorViolet": "Violet",
+    "colorEmerald": "Emerald",
+    "colorAmber": "Amber",
+    "colorCyan": "Cyan"
+  },
+  "paginator": {
+    "rowsPerPage": "Rows per page",
+    "page": "Page",
+    "of": "of",
+    "showing": "Showing",
+    "to": "to",
+    "prev": "Previous",
+    "next": "Next",
+    "total": "total"
+  },
+  "dataExplorer": {
+    "searchPlaceholder": "Search by name or ID…",
+    "searchHelper": "PokeAPI supports exact search by name or ID.",
+    "noResultsFor": "No Pokémon found for",
+    "col": {
+      "id": "#",
+      "image": "Image",
+      "name": "Name",
+      "types": "Types",
+      "action": "Detail"
+    }
   },
   "dashboard": {
     "title": "Angular 22 Showcase",
@@ -91,19 +128,19 @@
     },
     "di": {
       "title": "Dependency Injection",
-      "description": "@Service(), inject(), injectAsync() with onIdle prefetch, and InjectionToken."
+      "description": "@Service(), inject(), InjectionToken, and the Angular injector hierarchy."
     },
     "aria": {
       "title": "ARIA / Accessibility",
-      "description": "@angular/aria headless components: accordion, tabs, listbox, combobox, keyboard navigation."
+      "description": "@angular/aria headless components: accordion, tabs, listbox, and live regions."
     },
     "componentsLab": {
       "title": "Components Lab",
-      "description": "Visual showcase of all shared UI components: buttons, cards, badges, modal, toast."
+      "description": "Visual showcase of UI patterns: buttons, cards, badges, toast, and data table."
     },
     "performance": {
       "title": "Performance",
-      "description": "OnPush default, ChangeDetectionStrategy.Eager, @defer, track in @for, pure pipes."
+      "description": "OnPush strategy, signals, @defer triggers, track in @for, and pure pipes."
     }
   }
 }

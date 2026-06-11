@@ -2,15 +2,15 @@
   "nav": {
     "dashboard": "Inicio",
     "dataExplorer": "Explorador de Datos",
-    "signals": "Señales",
-    "resourceApi": "API de Recursos",
-    "signalForms": "Formularios de Señales",
-    "reactiveForms": "Formularios Reactivos",
+    "signals": "Signals",
+    "resourceApi": "Resource API",
+    "signalForms": "Signal Forms",
+    "reactiveForms": "Reactive Forms",
     "templates": "Sintaxis de Plantillas",
-    "router": "Enrutador",
+    "router": "Router",
     "di": "Inyección de Dependencias",
     "aria": "ARIA / Accesibilidad",
-    "componentsLab": "Laboratorio de Componentes",
+    "componentsLab": "Lab de Componentes",
     "performance": "Rendimiento",
     "groups": {
       "data": "Datos",
@@ -39,19 +39,56 @@
     "collapseSidebar": "Colapsar barra lateral"
   },
   "common": {
-    "loading": "Cargando...",
+    "loading": "Cargando…",
     "error": "Algo salió mal",
     "retry": "Reintentar",
     "empty": "Sin resultados",
+    "noResultsFor": "Sin resultados para",
     "search": "Buscar",
     "back": "Volver",
     "close": "Cerrar",
+    "clearSearch": "Limpiar búsqueda",
     "copy": "Copiar",
     "copied": "¡Copiado!",
     "showCode": "Mostrar código",
     "hideCode": "Ocultar código",
-    "learnMore": "Saber más",
+    "learnMore": "Ver más",
     "viewDocs": "Ver documentación"
+  },
+  "theme": {
+    "dark": "Oscuro",
+    "light": "Claro",
+    "toggle": "Cambiar tema",
+    "current": "Tema actual",
+    "primary": "Color principal",
+    "colorAngularRed": "Angular Rojo",
+    "colorBlue": "Azul",
+    "colorViolet": "Violeta",
+    "colorEmerald": "Esmeralda",
+    "colorAmber": "Ámbar",
+    "colorCyan": "Cian"
+  },
+  "paginator": {
+    "rowsPerPage": "Filas por página",
+    "page": "Página",
+    "of": "de",
+    "showing": "Mostrando",
+    "to": "a",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "total": "total"
+  },
+  "dataExplorer": {
+    "searchPlaceholder": "Buscar por nombre o ID…",
+    "searchHelper": "PokeAPI permite búsqueda exacta por nombre o ID.",
+    "noResultsFor": "No se encontró un Pokémon para",
+    "col": {
+      "id": "#",
+      "image": "Imagen",
+      "name": "Nombre",
+      "types": "Tipos",
+      "action": "Detalle"
+    }
   },
   "dashboard": {
     "title": "Angular 22 Showcase",
@@ -66,19 +103,19 @@
       "description": "Tabla remota con httpResource(), paginación server-side, búsqueda y vista detalle Pokémon."
     },
     "signals": {
-      "title": "Señales",
+      "title": "Signals",
       "description": "signal(), computed(), effect(), linkedSignal() y debounced() (experimental)."
     },
     "signalForms": {
-      "title": "Formularios de Señales",
+      "title": "Signal Forms",
       "description": "Nueva API de formularios Angular 22: form(), validators, validación asíncrona y estado en tiempo real."
     },
     "reactiveForms": {
-      "title": "Formularios Reactivos",
+      "title": "Reactive Forms",
       "description": "FormGroup, FormControl clásicos, validadores síncronos/asíncronos y campos dinámicos."
     },
     "resourceApi": {
-      "title": "API de Recursos",
+      "title": "Resource API",
       "description": "resource(), rxResource(), httpResource(), reload() y cancelación automática."
     },
     "templates": {
@@ -86,24 +123,24 @@
       "description": "@if, @for, @switch con @default never, @defer, @let, sintaxis spread y ng-content."
     },
     "router": {
-      "title": "Enrutador",
+      "title": "Router",
       "description": "Parámetros de ruta, guards, resolvers, lazy loading, eventos y navegación programática."
     },
     "di": {
       "title": "Inyección de Dependencias",
-      "description": "@Service(), inject(), injectAsync() con onIdle prefetch e InjectionToken."
+      "description": "@Service(), inject(), InjectionToken y la jerarquía de inyectores de Angular."
     },
     "aria": {
       "title": "ARIA / Accesibilidad",
-      "description": "Componentes headless @angular/aria: accordion, tabs, listbox, combobox, navegación por teclado."
+      "description": "Componentes headless @angular/aria: accordion, tabs, listbox y regiones live."
     },
     "componentsLab": {
-      "title": "Laboratorio de Componentes",
-      "description": "Vitrina visual de todos los componentes UI compartidos: botones, cards, badges, modal, toast."
+      "title": "Lab de Componentes",
+      "description": "Vitrina visual de patrones UI: botones, cards, badges, toast y tabla de datos."
     },
     "performance": {
       "title": "Rendimiento",
-      "description": "OnPush por defecto, ChangeDetectionStrategy.Eager, @defer, track en @for, pipes puras."
+      "description": "Estrategia OnPush, signals, triggers @defer, track en @for y pipes puras."
     }
   }
 }
