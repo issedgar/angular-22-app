@@ -28,7 +28,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
   selector: 'app-navbar',
   imports: [TranslatePipe],
   template: `
-    <header class="h-16 flex items-center px-3 sm:px-4 gap-2 sm:gap-3 bg-surface-800/80 backdrop-blur-sm border-b border-neutral-800 shrink-0 z-[60] shadow-card">
+    <header class="h-16 flex items-center px-2 sm:px-4 gap-1.5 sm:gap-3 bg-surface-800/80 backdrop-blur-sm border-b border-neutral-800 shrink-0 z-[60] shadow-card">
       <!-- Mobile hamburger -->
       <button
         class="lg:hidden p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
@@ -54,7 +54,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
       </button>
 
       <!-- Breadcrumb -->
-      <nav class="flex min-w-0 max-w-[9rem] items-center gap-2 text-sm sm:max-w-none" aria-label="Breadcrumb">
+      <nav class="flex min-w-0 max-w-[7rem] items-center gap-2 text-sm sm:max-w-none" aria-label="Breadcrumb">
         <ol class="flex items-center gap-2 list-none m-0 p-0">
           <li class="text-neutral-500 hidden sm:inline">
             {{ 'navbar.appName' | translate : ts.currentLanguage() }}
@@ -67,10 +67,10 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
       <div class="flex-1"></div>
 
       <!-- Primary color picker -->
-      <div class="relative hidden items-center sm:flex">
+      <div class="relative flex items-center">
         <button
           (click)="toggleColorPicker()"
-          class="p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
+          class="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
           [title]="'theme.primary' | translate : ts.currentLanguage()"
           type="button"
           [attr.aria-label]="'theme.primary' | translate : ts.currentLanguage()"
@@ -82,7 +82,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
       <!-- Theme toggle -->
       <button
         (click)="appearance.toggleTheme()"
-        class="p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
+        class="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-angular-red transition-colors"
         [title]="'theme.toggle' | translate : ts.currentLanguage()"
         type="button"
         [attr.aria-label]="'theme.toggle' | translate : ts.currentLanguage()"
@@ -108,7 +108,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
           <button
             (click)="switchLang(lang)"
             type="button"
-            class="px-2 py-1.5 text-xs font-semibold uppercase transition-colors leading-none sm:px-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-angular-red"
+            class="px-1.5 py-1.5 text-xs font-semibold uppercase transition-colors leading-none sm:px-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-angular-red"
             [class]="ts.currentLanguage() === lang
               ? 'bg-angular-red text-white'
               : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800'"
@@ -128,7 +128,7 @@ const ROUTE_LABEL_KEYS: Record<string, string> = {
     <!-- Color picker portado fuera del header para escapar su stacking context (backdrop-blur crea uno nuevo) -->
     @if (colorPickerOpen()) {
       <div class="fixed inset-0 z-[199]" (click)="colorPickerOpen.set(false)"></div>
-      <div class="fixed top-16 right-4 z-[200] rounded-xl border border-neutral-700 bg-surface-800 shadow-elevated p-3 min-w-44">
+      <div class="fixed top-16 right-2 z-[200] rounded-xl border border-neutral-700 bg-surface-800 shadow-elevated p-3 min-w-44 sm:right-4">
         <p class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2 px-1">
           {{ 'theme.primary' | translate : ts.currentLanguage() }}
         </p>
